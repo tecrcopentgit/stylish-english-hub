@@ -4,6 +4,9 @@ import { db } from '@/db';
 import { feeStructure } from '@/db/schema';
 import { asc } from 'drizzle-orm';
 
+// Prevents Next.js from attempting to statically generate or validate DB calls at build time
+export const dynamic = 'force-dynamic';
+
 export async function GET() {
   const session = await getSession();
   

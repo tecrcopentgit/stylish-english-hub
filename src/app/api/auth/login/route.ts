@@ -1,8 +1,11 @@
+// src/app/api/auth/login/route.ts
 import { NextRequest, NextResponse } from 'next/server';
 import { db } from '@/db';
 import { staff } from '@/db/schema';
 import { eq } from 'drizzle-orm';
 import { verifyPassword, createToken, setAuthCookie } from '@/lib/auth';
+
+export const dynamic = 'force-dynamic';
 
 export async function POST(request: NextRequest) {
   try {

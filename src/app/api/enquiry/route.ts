@@ -2,13 +2,15 @@ import { NextRequest, NextResponse } from 'next/server';
 import { db } from '@/db';
 import { enquiries } from '@/db/schema';
 
+// This forces Next.js to skip evaluating database queries at build time
+export const dynamic = 'force-dynamic';
+
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
     
     const { studentName, parentName, className, phone, program, shift, message } = body;
 
-    // Validate required fields
     if (!studentName || !parentName || !className || !phone) {
       return NextResponse.json(
         { error: 'Missing required fields' },
@@ -16,7 +18,6 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Insert enquiry into database
     const [newEnquiry] = await db.insert(enquiries).values({
       studentName,
       parentName,

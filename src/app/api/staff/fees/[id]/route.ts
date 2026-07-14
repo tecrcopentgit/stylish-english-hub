@@ -4,6 +4,9 @@ import { db } from '@/db';
 import { feeStructure } from '@/db/schema';
 import { eq } from 'drizzle-orm';
 
+// Prevents Next.js from evaluating database logic during static build compilation
+export const dynamic = 'force-dynamic';
+
 export async function PUT(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }

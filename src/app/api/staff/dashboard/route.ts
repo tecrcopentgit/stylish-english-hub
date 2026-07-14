@@ -4,6 +4,9 @@ import { db } from '@/db';
 import { students, attendance, payments } from '@/db/schema';
 import { eq, sql, and } from 'drizzle-orm';
 
+// Prevents Next.js from evaluating database logic during static build compilation
+export const dynamic = 'force-dynamic';
+
 export async function GET() {
   const session = await getSession();
   
