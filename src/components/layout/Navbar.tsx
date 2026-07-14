@@ -13,6 +13,9 @@ export default function Navbar() {
   const { t } = useLanguage();
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [ activeSection , setActiveSection ] = useState("#home")
+
+  
 
   useEffect(() => {
     const handleScroll = () => {
@@ -39,6 +42,7 @@ export default function Navbar() {
     href: string
   ) => {
     e.preventDefault();
+    setActiveSection(href);
     setIsMobileMenuOpen(false);
     const element = document.querySelector(href);
     if (element) {
@@ -52,6 +56,8 @@ export default function Navbar() {
     }
   };
 
+  
+
   return (
     <>
       <motion.header
@@ -63,23 +69,23 @@ export default function Navbar() {
         }`}
       >
         <nav className="container mx-auto px-4 lg:px-8">
-          <div className="flex items-center justify-between h-20">
+          <div className="group flex items-center justify-between h-20">
             {/* Logo */}
             <Link href="/" className="flex items-center gap-3">
               <div
-                className={`flex items-center justify-center rounded-full p-1 ${
+                className={`flex items-center justify-center rounded-xl shadow-xl shadow-blue-400  group-hover:rotate-5 p-1 ${
                   isScrolled ? 'bg-primary' : 'bg-blue-400 '
                 }`}
               >
                 <Image
                   src={stylish_english_academy_logo}
-                  className="rounded-full h-10 w-10"
+                  className="rounded h-10 w-10 object-cover "
                   alt="Academy Logo" // Added alt tag for accessibility
                 />
               </div>
               <div className="hidden sm:block">
                 <p
-                  className={`font-bold text-lg leading-tight ${
+                  className={`font-bold text-lg leading-tight group-hover:scale-105 ${
                     isScrolled ? 'text-primary' : 'text-white'
                   }`}
                 >
@@ -88,40 +94,35 @@ export default function Navbar() {
               </div>
             </Link>
 
-            {/* Desktop Navigation */}
-            {/* FIXED: Passed the proper event and value to the scrollToSection function */}
-            <select
-              onChange={(e) => {
-                const href = e.target.value;
-                if (href) {
-                  scrollToSection(e, href);
-                  e.target.value = ""; // Reset dropdown selection back to placeholder
-                }
-              }}
-              className={`hidden sm:flex font-medium text-sm transition-colors rounded-md border p-2 bg-transparent focus:outline-none focus:ring-2 focus:ring-accent ${
-                isScrolled
-                  ? 'text-gray-700 border-gray-300'
-                  : 'text-white bg-gray-900/50 border-white/20'
-              }`}
-              defaultValue=""
-            >
-              {/* FIXED: Added a proper default placeholder choice */}
-              <option value="" disabled hidden>
-                {  "Navigate to..."}
-              </option>
-              
-              {navLinks.map((link) => (
-                <option
-                  key={link.href}
-                  value={link.href}
-                  className={`rounded-full bg-blue-400/50 border font-serif border-red-600 p-2 ${
-                    isScrolled ? 'text-gray-700 ' : 'text-gray-900'
-                  }`}
-                >
-                  {link.label}
-                </option>
-              ))}
-            </select>
+           <select
+  // 1. Bind value to your active section state
+  value={activeSection} 
+  onChange={(e) => {
+    const href = e.target.value;
+    if (href) {
+      scrollToSection(e, href);
+      // 2. REMOVED: e.target.value = ""; (Let state handle the value)
+    }
+  }}
+  className={`hidden sm:flex font-medium text-sm transition-colors rounded-md border p-2 bg-transparent focus:outline-none focus:ring-2 focus:ring-accent ${
+    isScrolled ? 'text-gray-700 border-gray-300' : 'text-white bg-gray-900/50 border-white/20'
+  }`}
+>
+  {/* 3. REMOVED: Static "Navigate to..." placeholder option */}
+  
+  {navLinks.map((link) => (
+    <option
+      key={link.href}
+      value={link.href}
+      className={`rounded-full bg-blue-400/50 border font-bold border-red-600 p-2 ${
+        isScrolled ? 'text-gray-700' : 'text-gray-900'
+      }`}
+    >
+      {link.label}
+    </option>
+  ))}
+</select>
+
 
             {/* Right Section */}
             <div className="flex items-center gap-4">

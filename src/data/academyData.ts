@@ -7,9 +7,11 @@
 
 import kaja_sir from '../assets/kaja_sir.jpeg';
 import uvaish_photo from '../assets/uvaish_english.jpeg'
-import zulfia_photo from '../assets/zulfia.jpg';
-import maths_photo from '../assets/maths.png'
+import zulfia_photo from '../assets/zulfa_mam.jpeg';
+import thasnim_photo from '../assets/thasnim_mam.jpeg'
 import yahya_photo from '../assets/yahya.jpg'
+
+import classroom from '../assets/images/classroom.jpeg';
 
 export const academyData = {
   // Academy Name (Do not translate)
@@ -117,7 +119,7 @@ export const academyData = {
         ta: '15 ஆண்டுகளுக்கும் மேலான கற்பித்தல் அனுபவம்',
       },
       profile: {
-        en: 'S.M. Khaja Mohideen is an experienced English Fluency Guide with over 10 years of teaching experience. He helps students improve English fluency, grammar, pronunciation, vocabulary, and communication through simple and activity-based learning methods.',
+        en: 'S.M. Khaja Mohideen is an experienced English Fluency Guide with over 15 years of teaching experience. He helps students improve English fluency, grammar, pronunciation, vocabulary, and communication through simple and activity-based learning methods.',
         ta: 'S.M. Khaja Mohideen அவர்கள் 15 ஆண்டுகளுக்கும் மேலான கற்பித்தல் அனுபவம் கொண்ட ஆங்கிலப் பேச்சுத் திறன் வழிகாட்டி. எளிய விளக்கங்கள் மற்றும் செயல்முறைப் பயிற்சிகள் மூலம் மாணவர்களின் ஆங்கிலப் பேச்சு, இலக்கணம், உச்சரிப்பு, சொற்களஞ்சியம் மற்றும் தொடர்புத் திறனை மேம்படுத்த உதவுகிறார்.',
       },
       specialisations: {
@@ -207,7 +209,7 @@ export const academyData = {
     {
       id: 'jannathul-thasnim',
       name: 'Ms. S. Jannathul Thasnim',
-      image: zulfia_photo,
+      image: thasnim_photo,
       qualification: 'BCA',
       experience: {
         en: '1 Year',
@@ -224,11 +226,12 @@ export const academyData = {
     },
     {
       id: 'mathematics-teacher',
+    
       name: {
         en: 'Mathematics Teacher',
         ta: 'கணித ஆசிரியர்',
       },
-      image: maths_photo,
+      image: thasnim_photo,
       specialisations: {
         en: 'Mathematics, Step-by-Step Problem Solving, Calculation Skills, Logical Thinking',
         ta: 'கணிதம், படிப்படியான கணக்குத் தீர்வு, கணக்கிடும் திறன் மற்றும் தர்க்க சிந்தனை',
@@ -318,7 +321,9 @@ export const academyData = {
         en: 'Regular guidance to improve neat, clear, and readable handwriting in Tamil and English.',
         ta: 'தமிழ் மற்றும் ஆங்கிலத்தில் அழகாகவும் தெளிவாகவும் எழுதுவதற்கான பயிற்சிகள் வழங்கப்படும்.',
       },
+      
     },
+
     {
       id: 'personality-development',
       icon: 'Star',

@@ -5,15 +5,22 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { X, ChevronLeft, ChevronRight, ImageIcon } from 'lucide-react';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { academyData } from '@/data/academyData';
+import classroom from '../../assets/images/classroom.jpeg'
+import english from '../../assets/images/spoken_english.jpg';
+import reading from '../../assets/images/reading.jpg';
+import speaking from '../../assets/images/speaking.jpg';
+import events from '../../assets/images/events.jpg';
+import presentation from '../../assets/images/presentation.jpg';
+import Image from 'next/image';
 
 // Placeholder images until real ones are uploaded
 const placeholderImages = [
-  { id: '1', category: 'classroom', caption: { en: 'Classroom Learning Session', ta: 'வகுப்பறைப் பயிற்சி' } },
-  { id: '2', category: 'spoken-english', caption: { en: 'Spoken English Practice', ta: 'பேச்சு ஆங்கிலப் பயிற்சி' } },
-  { id: '3', category: 'reading', caption: { en: 'Reading Activity', ta: 'வாசிப்புச் செயல்பாடு' } },
-  { id: '4', category: 'public-speaking', caption: { en: 'Public Speaking Session', ta: 'மேடைப் பேச்சுப் பயிற்சி' } },
-  { id: '5', category: 'presentations', caption: { en: 'Student Presentation', ta: 'மாணவர் விளக்கவுரை' } },
-  { id: '6', category: 'events', caption: { en: 'Academy Event', ta: 'அகாடமி நிகழ்வு' } },
+  { id: '1', src: classroom , category: 'classroom', caption: { en: 'Classroom Learning Session', ta: 'வகுப்பறைப் பயிற்சி' } },
+  { id: '2',  src:english , category: 'spoken-english', caption: { en: 'Spoken English Practice', ta: 'பேச்சு ஆங்கிலப் பயிற்சி' } },
+  { id: '3', src:reading , category: 'reading', caption: { en: 'Reading Activity', ta: 'வாசிப்புச் செயல்பாடு' } },
+  { id: '4', src: speaking,category: 'public-speaking', caption: { en: 'Public Speaking Session', ta: 'மேடைப் பேச்சுப் பயிற்சி' } },
+  { id: '5', src: presentation, category: 'presentations', caption: { en: 'Student Presentation', ta: 'மாணவர் விளக்கவுரை' } },
+  { id: '6', src:events ,category: 'events', caption: { en: 'Academy Event', ta: 'அகாடமி நிகழ்வு' } },
 ];
 
 export default function Gallery() {
@@ -115,7 +122,7 @@ export default function Gallery() {
             >
               {/* Placeholder for image */}
               <div className="w-full h-full bg-gradient-to-br from-primary/20 to-primary/10 flex flex-col items-center justify-center">
-                <ImageIcon className="w-12 h-12 text-primary/40 mb-2" />
+                <Image src={image.src} alt={image.id} />
                 <p className="text-sm text-primary/60 text-center px-4">{image.caption[language]}</p>
               </div>
             </motion.div>
