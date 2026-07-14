@@ -17,10 +17,10 @@
     "isolatedModules": true,
     "jsx": "react-jsx",
     "incremental": true,
-    "baseUrl": ".",
+    // REMOVED: "baseUrl": "."
     "paths": {
       "@/*": [
-        "./src/*"
+        "./src/*" // FIXED: Explicitly keeping the prefix here
       ]
     },
     "plugins": [
@@ -37,6 +37,7 @@
     ".next/dev/types/**/*.ts"
   ],
   "exclude": [
-    "node_modules"
+    "node_modules",
+    ".next"
   ]
 }
