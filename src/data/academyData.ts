@@ -9,7 +9,7 @@ import kaja_sir from '../assets/kaja_sir.png';
 import uvaish_photo from '../assets/uvaish_english.png'
 import zulfia_photo from '../assets/zulfa_mam.jpeg';
 import thasnim_photo from '../assets/thasnim_mam.jpeg'
-import yahya_photo from '../assets/yahya.jpg'
+import yahya_photo from '../assets/yahya.jpeg'
 
 import classroom from '../assets/images/classroom.jpeg';
 

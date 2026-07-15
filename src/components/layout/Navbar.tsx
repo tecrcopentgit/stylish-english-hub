@@ -73,13 +73,13 @@ export default function Navbar() {
             {/* Logo */}
             <Link href="/" className="flex items-center gap-3">
               <div
-                className={`flex items-center justify-center rounded-xl shadow-xl shadow-blue-400  group-hover:rotate-5 p-1 ${
+                className={`flex items-center h-13 w-13 *:justify-center rounded-full shadow-xl shadow-blue-400  group-hover:rotate-5 p-1 ${
                   isScrolled ? 'bg-primary' : 'bg-blue-400 '
                 }`}
               >
                 <Image
                   src={stylish_english_academy_logo}
-                  className="rounded h-10 w-10 object-cover "
+                  className="rounded-full h-full w-full object-cover "
                   alt="Academy Logo" // Added alt tag for accessibility
                 />
               </div>
@@ -129,17 +129,18 @@ export default function Navbar() {
               <div className="hidden md:block">
                 {isScrolled ? <LanguageSwitchLight /> : <LanguageSwitch />}
               </div>
-              <a
-                href="#enquiry"
-                onClick={(e) => scrollToSection(e, '#enquiry')}
-                className={`hidden sm:inline-flex items-center px-5 py-2.5 rounded-lg transition-all ${
-                  isScrolled
-                    ? 'bg-blue-800 text-white hover:bg-primary-light'
-                    : 'bg-white text-black hover:bg-gray-100'
-                }`}
-              >
-                {t.nav.enquireNow}
-              </a>
+             <a 
+  href="#enquiry" 
+  onClick={(e) => scrollToSection(e, '#enquiry')} 
+  className={`hidden sm:inline-flex items-center px-5 py-2.5 rounded-lg transition-all ${
+    isScrolled 
+      ? 'bg-blue-800 text-white hover:text-cyan-100 hover:bg-blue-700' 
+      : 'bg-white text-blue-800 hover:bg-gray-100'
+  }`}
+> 
+  {t.nav.enquireNow} 
+</a>
+
 
               {/* Mobile Menu Button */}
               <button
@@ -188,7 +189,7 @@ export default function Navbar() {
                 <a
                   href="#enquiry"
                   onClick={(e) => scrollToSection(e, '#enquiry')}
-                  className="mt-2 py-3 px-4 bg-blue-700 text-white text-center font-medium rounded-lg hover:bg-blue-100 transition-colors"
+                  className="mt-2 py-3 px-4 bg-blue-700 text- text-center font-medium rounded-lg hover:bg-blue-100 transition-colors"
                 >
                   {t.nav.enquireNow}
                 </a>

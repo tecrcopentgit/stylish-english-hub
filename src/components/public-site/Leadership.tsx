@@ -35,14 +35,14 @@ export default function Leadership() {
             >
               <div className="card h-full overflow-hidden group">
   {/* Image Layout Wrapper */}
-  <div className="relative h-64 bg-gradient-to-br from-primary/10 to-primary/5 overflow-hidden">
+  <div className={ ` ${leader.experience  ? 'relative h-64 bg-gradient-to-br from-primary/10 to-primary/5 overflow-hidden' : '' }`}>
     <div className="absolute inset-0">
       <Image 
         src={leader.image}
         alt={leader.name}
         fill
-        sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 25vw"
-        className=" group-hover:scale-105 transition-transform duration-300 bg-black" 
+        sizes={` ${leader.experience ? '(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 25vw ': '' }`}
+        className={ `${ leader.experience ? 'group-hover:scale-105 transition-transform duration-300 bg-black' :''}`} 
       />
     </div>
     {/* Gradient Overlay on Hover */}
