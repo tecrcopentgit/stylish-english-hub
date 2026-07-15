@@ -33,71 +33,88 @@ export default function Leadership() {
               transition={{ duration: 0.6, delay: index * 0.2 }}
               className="card overflow-hidden"
             >
-              <div className="p-8">
-                {/* Profile Image */}
-                <div className="flex flex-col sm:flex-row items-center gap-6 mb-6">
-                  <div className="relative">
-                    <div className="w-50 h-50 sm:w-40 sm:h-40 rounded-full overflow-hidden border-4 border-accent shadow-xl hover:shadow-amber-400 hover:scale-104 hover:rotate-6 transition-all ease-in-out">
-                      <div className="w-full h-full bg-gradient-to-br from-primary/20 to-primary/10 flex items-center justify-center">
-                        <Image
-                          src = {leader.image}
-                          alt={leader.name}
-                          className="  rounded-full w-full h-full"
-                        />
-                      </div>
-                    </div>
-                    <div className="absolute -bottom-2 -right-2 w-10 h-10 bg-accent rounded-full flex items-center justify-center shadow-lg">
-                      <Award className="w-5 h-5 text-white" />
-                    </div>
-                  </div>
-                  <div className="text-center sm:text-left">
-                    <h3 className="text-xl  text-text-primary mb-1">{leader.name}</h3>
-                    <p className="text-primary font-medium text-sm mb-2">
-                      {leader.title[language]}
-                    </p>
-                    <p className="text-text-secondary text-sm">{leader.designation[language]}</p>
-                  </div>
-                </div>
+              <div className="card h-full overflow-hidden group">
+  {/* Image Layout Wrapper */}
+  <div className="relative h-64 bg-gradient-to-br from-primary/10 to-primary/5 overflow-hidden">
+    <div className="absolute inset-0">
+      <Image 
+        src={leader.image}
+        alt={leader.name}
+        fill
+        sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 25vw"
+        className=" group-hover:scale-105 transition-transform duration-300 bg-black" 
+      />
+    </div>
+    {/* Gradient Overlay on Hover */}
+    <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+    
+    {/* Floating Badge (Repositioned into the image frame) */}
+    <div className="absolute bottom-3 right-3 left-2 w-10 h-10  rounded-xl flex flex-row items-center justify-center shadow-lg m-2  z-10"> 
+      <div className='flex flex-row bg-accent/70  rounded-xl p-2 border border-amber-400 shadow-xl shadow-amber-200 '>
+         <Award className="w-5 h-5 text-accent" /> 
+        {leader.experiece_in_number ? <div className="text-sm flex text-white font-bold"> 
+          
+          <span >{leader.experiece_in_number}</span><span>Years</span> 
+        </div> : ''}
+      </div>
+      
+     
+      
+    </div> 
+  </div>
 
-                {/* Qualifications */}
-                <div className="mb-4 p-3 bg-bg-light rounded-lg">
-                  <p className="text-sm text-text-secondary">
-                    <span className="font-semibold text-text-primary">{t.leadership.qualifications}:</span>{' '}
-                    {leader.qualifications}
-                  </p>
-                  {'experience' in leader && leader.experience && (
-                    <p className="text-sm text-text-secondary mt-1">
-                      <span className="font-semibold text-text-primary">{t.leadership.experience}:</span>{' '}
-                      {leader.experience[language]}
-                    </p>
-                  )}
-                </div>
+  {/* Content */}
+  <div className="p-5">
+    <h3 className="font-bold text-lg text-text-primary mb-1 group-hover:text-primary transition-colors">
+      {leader.name}
+    </h3>
+    
+    <p className="text-primary font-semibold text-sm mb-1"> 
+      {leader.title[language as 'en' | 'ta']} 
+    </p> 
+    
+    <p className="text-text-secondary text-xs font-medium tracking-wide uppercase mb-3">
+      {leader.designation[language as 'en' | 'ta']}
+    </p>
 
-                {/* Profile */}
-                <p className="text-text-secondary text-sm leading-relaxed mb-4">
-                  {leader.profile[language]}
-                </p>
+    {/* Qualifications & Experience Block */}
+    <div className="mb-4 space-y-1">
+      <p className="text-sm text-text-secondary"> 
+        <span className="font-medium text-text-primary">{t.leadership.qualifications}:</span>{' '} 
+        {leader.qualifications} 
+      </p> 
+      {'experience' in leader && leader.experience && ( 
+        <p className="text-sm text-accent font-medium"> 
+          <span className="font-medium text-text-primary">{t.leadership.experience}:</span>{' '} 
+          {leader.experience[language as 'en' | 'ta']} 
+        </p> 
+      )} 
+    </div>
 
-                {/* Specialisations / Roles */}
-                <div>
-                  <p className="font-semibold text-text-primary text-sm mb-2 flex items-center gap-2">
-                    <Briefcase className="w-4 h-4 text-accent" />
-                    {'specialisations' in leader ? t.leadership.specialisations : t.leadership.keyRoles}
-                  </p>
-                  <div className="flex flex-wrap gap-2">
-                    {('specialisations' in leader && leader.specialisations ? leader.specialisations[language] : 'roles' in leader && leader.roles ? leader.roles[language] : [])?.map(
-                      (item: string, idx: number) => (
-                        <span
-                          key={idx}
-                          className="text-xs px-3 py-1 bg-primary/10 text-primary rounded-full"
-                        >
-                          {item}
-                        </span>
-                      )
-                    )}
-                  </div>
-                </div>
-              </div>
+    {/* Profile Bio with Line Clamp */} 
+    <p className="text-sm text-text-secondary leading-relaxed mb-4 line-clamp-3"> 
+      {leader.profile[language as 'en' | 'ta']} 
+    </p> 
+
+    {/* Specialisations / Roles Tags */} 
+    <div> 
+      <p className="text-xs font-semibold text-text-primary mb-2 uppercase tracking-wide flex items-center gap-1.5"> 
+        <Briefcase className="w-3.5 h-3.5 text-accent" /> 
+        {'specialisations' in leader ? t.leadership.specialisations : t.leadership.keyRoles} 
+      </p> 
+      <div className="flex flex-wrap gap-1.5"> 
+        {('specialisations' in leader && leader.specialisations ? leader.specialisations[language as 'en' | 'ta'] : 'roles' in leader && leader.roles ? leader.roles[language as 'en' | 'ta'] : [])?.map( 
+          (item: string, idx: number) => ( 
+            <span key={idx} className="text-xs px-2.5 py-0.5 bg-primary/10 text-primary font-medium rounded-full" > 
+              {item} 
+            </span> 
+          ) 
+        )} 
+      </div> 
+    </div> 
+  </div>
+</div>
+
             </motion.div>
           ))}
         </div>

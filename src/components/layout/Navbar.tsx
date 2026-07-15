@@ -7,7 +7,7 @@ import { useLanguage } from '@/contexts/LanguageContext';
 import LanguageSwitch, { LanguageSwitchLight } from '@/components/ui/LanguageSwitch';
 import { academyData } from '@/data/academyData';
 import Image from 'next/image';
-import stylish_english_academy_logo from '../../assets/stylish_english_hub.jpeg';
+import stylish_english_academy_logo from '../../assets/stylish_english_hub.png';
 
 export default function Navbar() {
   const { t } = useLanguage();

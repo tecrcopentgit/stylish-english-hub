@@ -5,8 +5,8 @@
 // All content changes should be made here for consistency.
 // ============================================================
 
-import kaja_sir from '../assets/kaja_sir.jpeg';
-import uvaish_photo from '../assets/uvaish_english.jpeg'
+import kaja_sir from '../assets/kaja_sir.png';
+import uvaish_photo from '../assets/uvaish_english.png'
 import zulfia_photo from '../assets/zulfa_mam.jpeg';
 import thasnim_photo from '../assets/thasnim_mam.jpeg'
 import yahya_photo from '../assets/yahya.jpg'
@@ -114,6 +114,7 @@ export const academyData = {
         ta: 'நிறுவனர் மற்றும் முதன்மை ஆங்கிலப் பயிற்சியாளர்',
       },
       qualifications: 'M.Com., M.A. (English), PGDSE, B.Ed., D.A.T.',
+      experiece_in_number: '15',
       experience: {
         en: '15+ Years',
         ta: '15 ஆண்டுகளுக்கும் மேலான கற்பித்தல் அனுபவம்',

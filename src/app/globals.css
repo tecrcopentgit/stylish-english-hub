@@ -326,7 +326,7 @@ a:hover {
 }
 
 /* Status indicators */
-.status-present {
+.status-present { 
   background-color: #dcfce7;
   color: #16a34a;
   padding: 0.25rem 0.75rem;

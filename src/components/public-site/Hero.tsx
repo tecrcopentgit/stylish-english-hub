@@ -4,6 +4,8 @@ import { motion } from 'framer-motion';
 import { ArrowRight, Phone, MessageCircle } from 'lucide-react';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { academyData } from '@/data/academyData';
+import Image from 'next/image';
+import whatsapp_logo from '../../assets/logo/whatsapp.png';
 
 export default function Hero() {
   const { t } = useLanguage();
@@ -139,7 +141,7 @@ export default function Hero() {
           className="w-12 h-12 bg-green-500 rounded-full flex items-center justify-center text-white hover:bg-green-600 transition-all"
           aria-label="Chat on WhatsApp"
         >
-          <MessageCircle className="w-5 h-5" />
+          <Image src={whatsapp_logo} alt='' className='rounded-full hover:scale-105 hover:shadow-xl shadow-green-400'/>
         </a>
       </motion.div>
     </section>
