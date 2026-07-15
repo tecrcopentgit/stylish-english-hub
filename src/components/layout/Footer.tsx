@@ -4,6 +4,8 @@ import Link from 'next/link';
 import { GraduationCap, Phone, MessageCircle, Mail, MapPin, Clock } from 'lucide-react';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { academyData } from '@/data/academyData';
+import Image from 'next/image';
+import logo from '../../assets/stylish_english_hub.png';
 
 export default function Footer() {
   const { language, t } = useLanguage();
@@ -22,17 +24,17 @@ export default function Footer() {
   }));
 
   return (
-    <footer className="bg-secondary text-white">
+    <footer className="bg-secondary text-white p-10">
       <div className="container mx-auto px-4 py-12 lg:py-16">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-12">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-12 items-center justify-between">
           {/* Academy Info */}
           <div className="lg:col-span-1">
             <div className="flex items-center gap-3 mb-4">
-              <div className="w-12 h-12 bg-accent rounded-lg flex items-center justify-center">
-                <GraduationCap className="w-7 h-7 text-secondary" />
+              <div className="w-12 h-12 rounded-full bg-accent  flex items-center justify-center">
+                <Image src={ logo } className='h-full rounded-full shadow-accent shadow-xl ' alt=''/>
               </div>
               <div>
-                <h3 className="font-bold text-lg">{academyData.name}</h3>
+                <p className="font-bold text-lg">{academyData.name}</p>
                 <p className="text-sm text-gray-400">{academyData.tagline[language]}</p>
               </div>
             </div>
@@ -45,8 +47,9 @@ export default function Footer() {
 
           {/* Quick Links */}
           <div>
+            
             <h4 className="font-semibold text-lg mb-4 text-accent">{t.footer.quickLinks}</h4>
-            <h2></h2>
+            <p className='text-accent text-xl font-medium '>Quick Links</p>
             <ul className="space-y-2">
               {quickLinks.map((link) => (
                 <li key={link.href}>
@@ -148,8 +151,15 @@ export default function Footer() {
           </div>
         </div>
 
+        
         {/* Copyright */}
         <div className="mt-12 pt-8 border-t border-gray-700">
+          <div className='flex flex-row items-center  gap-1'>
+          <a className='font-mono bg-purple-500/50 p-1 rounded-full border border-red-500 hover:scale-104' href= 'https://tecrcopent.netlify.app'>tecRcoPENT</a>|
+          <a className='font-heading bg-green-500/50 p-1 rounded-full border-green-300 border hover:scale-104' href=''>GEN-UV</a> |
+          <a className='bg-blue-400/30 border border-cyan-300 p-1 rounded-full hover:scale-104' href='https://abdulhaadhifolio.netlify.app'>AB Haadhi</a>
+        </div>
+
           <div className="flex flex-col md:flex-row items-center justify-between gap-4">
             <p className="text-gray-400 text-sm text-center md:text-left">
               {t.footer.copyright}
@@ -159,7 +169,11 @@ export default function Footer() {
             </p>
           </div>
         </div>
+
+        
       </div>
+
+      
     </footer>
   );
 }

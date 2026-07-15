@@ -3,6 +3,7 @@ import { Poppins, Inter } from "next/font/google";
 import "./globals.css";
 import { LanguageProvider } from "@/contexts/LanguageContext";
 import { AuthProvider } from "@/contexts/AuthContext";
+import logo from '../assets/stylish_english_hub.png';
 
 const poppins = Poppins({
   subsets: ["latin"],
@@ -67,7 +68,7 @@ export default function RootLayout({
           href="https://fonts.googleapis.com/css2?family=Noto+Sans+Tamil:wght@400;500;600;700&display=swap"
           rel="stylesheet"
         />
-        <link rel="icon" href="/favicon.ico" sizes="any" />
+        <link rel="icon" href={logo.src} sizes="any" />
       </head>
       <body className={`${inter.className} antialiased`}>
         <AuthProvider>

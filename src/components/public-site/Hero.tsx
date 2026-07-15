@@ -5,6 +5,7 @@ import { ArrowRight, Phone, MessageCircle } from 'lucide-react';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { academyData } from '@/data/academyData';
 import Image from 'next/image';
+import academy_logo from '../../assets/stylish_english_hub.png';
 import whatsapp_logo from '../../assets/logo/whatsapp.png';
 
 export default function Hero() {
@@ -26,7 +27,7 @@ export default function Hero() {
   return (
     <section
       id="home"
-      className="relative min-h-screen flex items-center justify-center overflow-hidden"
+      className="relative min-h-screen flex items-center justify-center overflow-hidden p-10"
     >
       {/* Background */}
       <div
@@ -34,6 +35,7 @@ export default function Hero() {
         style={{
           backgroundImage: `url('${academyData.images.heroBackground}')`,
         }}
+        data-aos='fade-in'
       >
         {/* Gradient Overlay */}
         <div className="absolute inset-0 hero-overlay" />
@@ -54,8 +56,9 @@ export default function Hero() {
             transition={{ duration: 0.8, delay: 0.2 }}
             className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold text-white mb-6 leading-tight"
           >
-            <span className="block">{t.hero.heading}</span>
-            <span className="block text-accent">{t.hero.headingLine2}</span>
+            <div className='flex p-20 items-center justify-center '><Image className=' h-40 w-40 rounded-full shadow-xl shadow-blue-200' src = {academy_logo} alt = ''/></div>
+            <span className="block" data-aos='zoom-in'>STYLISH ENGLISH</span>
+            <span className="block text-accent">ACADEMY</span>
           </motion.h1>
 
           {/* Description */}

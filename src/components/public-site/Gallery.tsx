@@ -9,8 +9,8 @@ import classroom from '../../assets/images/classroom.jpeg'
 import english from '../../assets/images/spoken_english.jpg';
 import reading from '../../assets/images/reading.jpg';
 import speaking from '../../assets/images/speaking.jpg';
-import events from '../../assets/images/events.jpg';
-import presentation from '../../assets/images/presentation.jpg';
+import events from '../../assets/images/events.jpeg';
+import presentation from '../../assets/images/presentation.jpeg';
 import Image from 'next/image';
 
 // Placeholder images until real ones are uploaded

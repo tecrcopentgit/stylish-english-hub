@@ -14,9 +14,21 @@ import Contact from '@/components/public-site/Contact';
 import EnquiryForm from '@/components/public-site/EnquiryForm';
 import WhatsAppButton from '@/components/public-site/WhatsAppButton';
 
+import { useEffect } from 'react'; 
+import AOS from 'aos';
+import 'aos/dist/aos.css';
+
+
+
 export default function HomePage() {
+   useEffect(() => {
+    AOS.init({
+      duration: 800,
+      once: false,
+    });
+  }, []);
   return (
-    <main className="min-h-screen   ">
+    <main className="min-h-screen   " >
       <Navbar />
       <Hero />
       <About />

@@ -6,21 +6,21 @@
 // ============================================================
 
 import kaja_sir from '../assets/kaja_sir.png';
-import uvaish_photo from '../assets/uvaish_english.png'
+import uvaish_photo from '../assets/uvaish_english.png';
 import zulfia_photo from '../assets/zulfa_mam.jpeg';
-import thasnim_photo from '../assets/thasnim_mam.jpeg'
-import yahya_photo from '../assets/yahya.jpeg'
+import thasnim_photo from '../assets/thasnim_mam.jpeg';
+import yahya_photo from '../assets/yahya.jpeg';
 
 import classroom from '../assets/images/classroom.jpeg';
 
 export const academyData = {
   // Academy Name (Do not translate)
   name: 'Stylish English Academy',
-  logo:'',
+  logo:'' ,
   
   // Taglines
   tagline: {
-    en: 'Learn Today, Lead Tomorrow',
+    en: 'Stylish English Academy',
     ta: 'இன்று கற்போம், நாளை வழிநடத்துவோம்!',
   },
   secondaryTagline: {
