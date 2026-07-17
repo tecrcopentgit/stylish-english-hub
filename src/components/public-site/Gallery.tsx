@@ -7,7 +7,7 @@ import { useLanguage } from '@/contexts/LanguageContext';
 import { academyData } from '@/data/academyData';
 import classroom from '../../assets/images/classroom.jpeg'
 import english from '../../assets/images/spoken_english.jpg';
-import reading from '../../assets/images/reading.jpg';
+import reading from '../../assets/images/reading.jpeg';
 import speaking from '../../assets/images/speaking.jpg';
 import events from '../../assets/images/events.jpeg';
 import presentation from '../../assets/images/presentation.jpeg';
@@ -21,6 +21,7 @@ const placeholderImages = [
   { id: '4', src: speaking,category: 'public-speaking', caption: { en: 'Public Speaking Session', ta: 'மேடைப் பேச்சுப் பயிற்சி' } },
   { id: '5', src: presentation, category: 'presentations', caption: { en: 'Student Presentation', ta: 'மாணவர் விளக்கவுரை' } },
   { id: '6', src:events ,category: 'events', caption: { en: 'Academy Event', ta: 'அகாடமி நிகழ்வு' } },
+  {id:'7' , src:reading , categorty:'spoken-english' , caption: {en:'Hand Writing' , ta:''}}
 ];
 
 export default function Gallery() {

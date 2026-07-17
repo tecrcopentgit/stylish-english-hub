@@ -21,7 +21,7 @@ export default function Teachers() {
           <h2 className="section-heading">{t.teachers.heading}</h2>
         </motion.div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-6">
           {academyData.teachers.map((teacher, index) => {
             // FIXED: TypeScript safely reads the correct language string here
             const teacherName = typeof teacher.name === 'string' 
@@ -75,14 +75,14 @@ export default function Teachers() {
                       <p className="text-xs font-semibold text-text-primary mb-1 uppercase tracking-wide">
                         {t.teachers.specialisations}
                       </p>
-                      <p className="text-sm text-text-secondary leading-relaxed">
+                      <p className="text-sm text-text-secondary  text-xs leading-relaxed">
                         {teacher.specialisations[language as 'en' | 'ta']}
                       </p>
                     </div>
 
-                    <p className="text-sm text-text-secondary leading-relaxed line-clamp-3">
-                      {teacher.profile[language as 'en' | 'ta']}
-                    </p>
+                    <div className="text-sm flex gap-2 items-center  justify-center p-2 text-text-secondary leading-relaxed whitespace-normal break-words overflow-visible text-xs line-clamp-3">
+                     <div className='w-2 h-10 bg-blue-600 rounded-xl'></div> <p>{teacher.profile[language as 'en' | 'ta']}</p>
+                    </div>
                   </div>
                 </div>
               </motion.div>

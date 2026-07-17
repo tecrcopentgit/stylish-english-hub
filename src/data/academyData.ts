@@ -203,8 +203,8 @@ export const academyData = {
         ta: 'சமூக அறிவியல், தமிழ், தமிழ் மற்றும் ஆங்கிலக் கையெழுத்துப் பயிற்சி, வாசிப்புப் பயிற்சி',
       },
       profile: {
-        en: 'Ms. Zulfa Nisa specialises in making Social Science concepts simple and engaging. She also supports students in Tamil learning, reading practice, and handwriting development in Tamil and English.',
-        ta: 'Ms. Zulfa Nisa அவர்கள் சமூக அறிவியல் பாடங்களை மாணவர்கள் எளிதாகப் புரிந்துகொள்ளும் வகையில் கற்பிக்கிறார். மேலும் தமிழ், வாசிப்புப் பயிற்சி மற்றும் தமிழ்–ஆங்கிலக் கையெழுத்து மேம்பாட்டிலும் மாணவர்களுக்கு வழிகாட்டுகிறார்.',
+        en: 'Engaging Social Science tutor and dual-language educator specialising in Tamil literacy and English/Tamil handwriting development',
+        ta: 'சமூக அறிவியல், தமிழ்மொழித் திறன் மற்றும் இருமொழி கையெழுத்துப் பயிற்சியில் சிறந்த வழிகாட்டி',
       },
     },
     {
@@ -221,8 +221,8 @@ export const academyData = {
         ta: 'அடிப்படை கணிதம், அறிவியல், தமிழ், கையெழுத்துப் பயிற்சி மற்றும் வாசிப்புப் பயிற்சி',
       },
       profile: {
-        en: 'Ms. S. Jannathul Thasnim explains elementary Mathematics and Science concepts in a simple and engaging manner. She also supports students in Tamil learning, handwriting development, and reading practice.',
-        ta: 'Ms. S. Jannathul Thasnim அவர்கள் அடிப்படை கணிதம் மற்றும் அறிவியல் கருத்துகளை மாணவர்கள் எளிதாகப் புரிந்துகொள்ளும் வகையில் கற்பிக்கிறார். மேலும் தமிழ், கையெழுத்து மேம்பாடு மற்றும் வாசிப்புப் பயிற்சியிலும் உதவுகிறார்.',
+        en: 'Primary educator simplifying Math and Science while fostering Tamil literacy and dual-language handwriting development',
+        ta: 'ஆரம்பக் கல்வி கணிதம், அறிவியல் மற்றும் தமிழ்மொழித் திறன்களுடன் இருமொழி கையெழுத்துப் பயிற்சியிலும் சிறந்த வழிகாட்டி',
       },
     },
     {
@@ -238,8 +238,8 @@ export const academyData = {
         ta: 'கணிதம், படிப்படியான கணக்குத் தீர்வு, கணக்கிடும் திறன் மற்றும் தர்க்க சிந்தனை',
       },
       profile: {
-        en: 'A dedicated Mathematics teacher who helps students understand mathematical concepts through simple explanations, step-by-step guidance, and regular practice.',
-        ta: 'கணிதக் கருத்துகளை எளிய விளக்கங்கள், படிப்படியான வழிகாட்டுதல் மற்றும் தொடர்ச்சியான பயிற்சிகள் மூலம் மாணவர்கள் புரிந்துகொள்ள உதவும் அர்ப்பணிப்புள்ள கணித ஆசிரியர்.',
+        en: 'Dedicated Mathematics educator simplifying complex concepts through step-by-step guidance and structured practice',
+        ta: 'கணிதக் கருத்துகளை எளிய விளக்கங்கள், படிப் படியான வழிகாட்டுதல் மற்றும் தொடர் பயிற்சி மூலம் கற்பிக்கும் அர்ப்பணிப்புள்ள ஆசிரியர்',
       },
     },
     {
@@ -252,8 +252,8 @@ export const academyData = {
         ta: 'ஆங்கிலப் பாடம், தமிழில் எளிய ஆங்கில விளக்கம், அடிப்படை இலக்கணம், பேச்சு ஆங்கிலம், தொடர்புத் திறன் மற்றும் வரலாற்றுப் பாட உதவி',
       },
       profile: {
-        en: 'Mr. R. Mohamed Yahya helps students understand English lessons through simple explanations in Tamil. He supports students in grammar, Spoken English, communication confidence, History, and academic doubt-clearing.',
-        ta: 'Mr. R. Mohamed Yahya அவர்கள் ஆங்கிலப் பாடங்களை தமிழில் எளிமையாக விளக்கி மாணவர்கள் புரிந்துகொள்ள உதவுகிறார். மேலும் ஆங்கில இலக்கணம், பேச்சு ஆங்கிலம், தொடர்புத் திறன், வரலாறு மற்றும் பாடச் சந்தேகங்களைத் தெளிவுபடுத்துவதிலும் வழிகாட்டுகிறார்.',
+        en: 'Bilingual educator simplifying English and History through Tamil while building grammar, speaking confidence, and academic clarity',
+        ta: 'தமிழ் வழி எளிய விளக்கங்கள் மூலம் ஆங்கிலம் மற்றும் வரலாற்றைக் கற்பித்து, இலக்கணம், சரளமான பேச்சுத்திறனை வளர்க்கும் சிறந்த ஆசிரியர்',
       },
     },
   ],

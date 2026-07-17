@@ -57,8 +57,8 @@ export default function Hero() {
             className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold text-white mb-6 leading-tight "
           >
             
-            <span className="block" data-aos='zoom-in'>STYLISH ENGLISH</span>
-            <span className="block text-accent">Knowledge Hub</span>
+            <span className=" text-5xl" data-aos='zoom-in'>STYLISH ENGLISH</span>
+            <span className="block text-accent text-xl ">KNOWLEDGE HUB</span>
             <div className='flex  items-center justify-center '><Image className=' h-20 w-20 rounded-full shadow-xl shadow-blue-200' src = {academy_logo} alt = ''/></div>
           </motion.h1>
 

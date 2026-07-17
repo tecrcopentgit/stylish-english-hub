@@ -30,8 +30,8 @@ export default function Footer() {
           {/* Academy Info */}
           <div className="lg:col-span-1">
             <div className="flex items-center gap-3 mb-4">
-              <div className="w-12 h-12 rounded-full bg-accent  flex items-center justify-center">
-                <Image src={ logo } className='h-full rounded-full shadow-accent shadow-xl ' alt=''/>
+              <div className="rounded-full   flex items-center justify-center">
+                <Image src={ logo } className=' h-14 w-3/4 md:w-full rounded-full shadow-accent shadow-xl ' alt=''/>
               </div>
               <div>
                 <p className="font-bold text-lg">{academyData.name}</p>
@@ -154,9 +154,9 @@ export default function Footer() {
         
         {/* Copyright */}
         <div className="mt-12 pt-8 border-t border-gray-700">
-          <div className='flex flex-row items-center  gap-1'>
+          <div className='flex flex-row items-center justify-center md:justify-normal text-xs  gap-1'>
           <a className='font-mono bg-purple-500/50 p-1 rounded-full border border-red-500 hover:scale-104' href= 'https://tecrcopent.netlify.app'>tecRcoPENT</a>|
-          <a className='font-heading bg-green-500/50 p-1 rounded-full border-green-300 border hover:scale-104' href=''>GEN-UV</a> |
+          <a className='font-heading bg-green-500/50 p-1 rounded-full border-green-300 border hover:scale-104' href='https://gen-z-uv-offical.vercel.app/'>GEN-UV</a> |
           <a className='bg-blue-400/30 border border-cyan-300 p-1 rounded-full hover:scale-104' href='https://abdulhaadhifolio.netlify.app'>AB Haadhi</a>
         </div>
 
@@ -164,7 +164,7 @@ export default function Footer() {
             <p className="text-gray-400 text-sm text-center md:text-left">
               {t.footer.copyright}
             </p>
-            <p className="text-accent text-sm font-medium">
+            <p className="text-accent text-center text-sm font-medium">
               {t.footer.tagline}
             </p>
           </div>
