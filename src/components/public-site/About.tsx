@@ -65,12 +65,12 @@ export default function About() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, margin: '-50px' }}
                 transition={{ duration: 0.5, delay: index * 0.1 }}
-                className="card p-6 text-center group"
+                className="card p-3 text-center group"
               >
-                <div className="w-14 h-14 mx-auto mb-4 bg-primary/10 rounded-xl flex items-center justify-center group-hover:bg-primary transition-colors duration-300">
-                  <Icon className="w-7 h-7 text-primary group-hover:text-white transition-colors duration-300" />
+                <div className="w-17 h-14 p-3 mx-auto mb-4 bg-primary/10 rounded-xl flex items-center justify-center group-hover:bg-primary transition-colors duration-300">
+                  <Icon className="w-6 h-7 text-primary group-hover:text-white transition-colors duration-300" />
                 </div>
-                <h3 className="font-semibold text-sm text-text-primary leading-tight">
+                <h3 className="font-semibold text-xs   text-text-primary leading-tight">
                   {t.about.features[featureKey]}
                 </h3>
               </motion.div>
