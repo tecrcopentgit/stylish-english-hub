@@ -67,10 +67,10 @@ export default function About() {
                 transition={{ duration: 0.5, delay: index * 0.1 }}
                 className="card p-3 text-center group"
               >
-                <div className="w-17 h-14 p-3 mx-auto mb-4 bg-primary/10 rounded-xl flex items-center justify-center group-hover:bg-primary transition-colors duration-300">
-                  <Icon className="w-6 h-7 text-primary group-hover:text-white transition-colors duration-300" />
+                <div className="w-10 h-10 mx-auto mb-4 bg-primary/10 rounded-xl flex items-center justify-center group-hover:bg-primary transition-colors duration-300">
+                  <Icon className="w-4 h-4 text-primary group-hover:text-white transition-colors duration-300" />
                 </div>
-                <h3 className="font-semibold text-xs   text-text-primary leading-tight">
+                <h3 className="font-light text-xs   text-text-primary ">
                   {t.about.features[featureKey]}
                 </h3>
               </motion.div>
