@@ -9,6 +9,10 @@ import { z } from 'zod';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { academyData } from '@/data/academyData';
 
+// The WhatsApp number that will receive enquiries, in international format
+// without '+', spaces, or leading zeros (e.g. 919876543210 for +91 98765 43210).
+const WHATSAPP_NUMBER = '919566180862';
+
 const enquirySchema = z.object({
   studentName: z.string().min(1, 'Student name is required'),
   parentName: z.string().min(1, 'Parent name is required'),
@@ -39,24 +43,43 @@ export default function EnquiryForm() {
     resolver: zodResolver(enquirySchema),
   });
 
+  const buildWhatsAppMessage = (data: EnquiryFormData) => {
+    const programLabel = data.program
+      ? academyData.programs.find((p) => p.id === data.program)?.title[language]
+      : '';
+    const shiftLabel = data.shift
+      ? academyData.schedule.shifts.find((s) => s.id === data.shift)?.time
+      : '';
+
+    const lines = [
+      '*New Admission Enquiry*',
+      `*Student Name:* ${data.studentName}`,
+      `*Parent Name:* ${data.parentName}`,
+      `*Class/Grade:* ${data.className}`,
+      `*Phone:* ${data.phone}`,
+      programLabel ? `*Program:* ${programLabel}` : '',
+      shiftLabel ? `*Preferred Shift:* ${shiftLabel}` : '',
+      data.message ? `*Message:* ${data.message}` : '',
+    ].filter(Boolean);
+
+    return lines.join('\n');
+  };
+
   const onSubmit = async (data: EnquiryFormData) => {
     setStatus('loading');
-    
-    try {
-      const response = await fetch('/api/enquiry', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(data),
-      });
 
-      if (response.ok) {
-        setStatus('success');
-        reset();
-        setTimeout(() => setStatus('idle'), 5000);
-      } else {
-        setStatus('error');
-        setTimeout(() => setStatus('idle'), 5000);
-      }
+    try {
+      const message = buildWhatsAppMessage(data);
+      const encodedMessage = encodeURIComponent(message);
+      const whatsappUrl = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodedMessage}`;
+
+      // Open WhatsApp (app on mobile, WhatsApp Web on desktop) with the
+      // enquiry pre-filled as a message ready to send.
+      window.open(whatsappUrl, '_blank', 'noopener,noreferrer');
+
+      setStatus('success');
+      reset();
+      setTimeout(() => setStatus('idle'), 5000);
     } catch {
       setStatus('error');
       setTimeout(() => setStatus('idle'), 5000);
@@ -66,7 +89,7 @@ export default function EnquiryForm() {
   const getErrorMessage = (field: keyof EnquiryFormData) => {
     const error = errors[field];
     if (!error) return null;
-    
+
     const validationMessages = t.enquiry.validation;
     switch (field) {
       case 'studentName':
@@ -76,8 +99,8 @@ export default function EnquiryForm() {
       case 'className':
         return validationMessages.gradeRequired;
       case 'phone':
-        return error.type === 'too_small' 
-          ? validationMessages.phoneRequired 
+        return error.type === 'too_small'
+          ? validationMessages.phoneRequired
           : validationMessages.phoneInvalid;
       default:
         return error.message;

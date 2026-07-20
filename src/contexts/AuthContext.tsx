@@ -1,21 +1,42 @@
 'use client';
 
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import { getSessionUser, registerUser, loginUser, logoutUser } from './authActions';
 
-interface User {
+export interface User {
   id: number;
   email: string;
   name: string;
   role: 'admin' | 'teacher' | 'account_staff';
 }
 
+export interface Credentials {
+  email: string;
+  password: string;
+  name?: string;
+  role?: 'admin' | 'teacher' | 'account_staff';
+}
+
 interface AuthContextType {
   user: User | null;
   isLoading: boolean;
-  login: (email: string, password: string) => Promise<{ success: boolean; error?: string }>;
+  // Adjusted signature to support object payload or distinct multi-arguments
+  login: (emailOrCredentials: string | Credentials, password?: string) => Promise<{ success: boolean; error?: string }>;
+  signup: (credentials: Credentials) => Promise<{ success: boolean; error?: string }>;
   logout: () => Promise<void>;
   checkAuth: () => Promise<void>;
 }
+
+ const mapToUser = (rawUser: Record<string, unknown> | null | undefined): User | null => {
+    if (!rawUser) return null;
+    return {
+      id: Number(rawUser.id),
+      email: String(rawUser.email || ''),
+      name: String(rawUser.name || ''),
+      role: (rawUser.role as User['role']) || 'teacher',
+    };
+  };
+
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
@@ -25,14 +46,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const checkAuth = async () => {
     try {
-      const response = await fetch('/api/auth/me');
-      if (response.ok) {
-        const data = await response.json();
-        setUser(data.user);
-      } else {
-        setUser(null);
-      }
-    } catch {
+      const currentUser = await getSessionUser();
+      setUser(currentUser as User | null);
+    } catch (error) {
       setUser(null);
     } finally {
       setIsLoading(false);
@@ -43,37 +59,51 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     checkAuth();
   }, []);
 
-  const login = async (email: string, password: string) => {
+  const login = async (emailOrCredentials: string | Credentials, password?: string) => {
     try {
-      const response = await fetch('/api/auth/login', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, password }),
-      });
+      // Normalize arguments to ensure compatibility with both signature styles
+      const payload: Credentials = 
+        typeof emailOrCredentials === 'string' 
+          ? { email: emailOrCredentials, password: password || '' } 
+          : emailOrCredentials;
 
-      const data = await response.json();
-
-      if (response.ok) {
-        setUser(data.user);
+      const res = await loginUser(payload);
+      
+      if (res.success && res.user) {
+        setUser( mapToUser(res.user));
         return { success: true };
-      } else {
-        return { success: false, error: data.error || 'Login failed' };
       }
-    } catch {
-      return { success: false, error: 'An error occurred' };
+      return { success: false, error: res.error || 'Login failed' };
+    } catch (error) {
+      return { success: false, error: error instanceof Error ? error.message : 'An unexpected error occurred' };
+    }
+  };
+
+  const signup = async (credentials: Credentials) => {
+    try {
+      const res = await registerUser(credentials);
+      if (res.success && res.user) {
+        setUser(mapToUser(res.user));
+        return { success: true };
+      }
+      return { success: false, error: res.error || 'Registration failed' };
+    } catch (error) {
+      return { success: false, error: error instanceof Error ? error.message : 'An unexpected error occurred' };
     }
   };
 
   const logout = async () => {
     try {
-      await fetch('/api/auth/logout', { method: 'POST' });
+      await logoutUser();
+    } catch (error) {
+      console.error('Error during logout execution:', error);
     } finally {
       setUser(null);
     }
   };
 
   return (
-    <AuthContext.Provider value={{ user, isLoading, login, logout, checkAuth }}>
+    <AuthContext.Provider value={{ user, isLoading, login, signup, logout, checkAuth }}>
       {children}
     </AuthContext.Provider>
   );

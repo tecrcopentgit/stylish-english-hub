@@ -14,18 +14,26 @@ import { LanguageSwitchLight } from '@/components/ui/LanguageSwitch';
 import { academyData } from '@/data/academyData';
 
 // Moved out of component to prevent re-instantiation on renders
-const loginSchema = z.object({
-  email: z.string().min(1, 'Required').email('Invalid'),
-  password: z.string().min(1, 'Required'),
-});
+const registerSchema = z
+  .object({
+    name: z.string().min(1, 'Required').min(2, 'Too short'),
+    email: z.string().min(1, 'Required').email('Invalid'),
+    password: z.string().min(1, 'Required').min(8, 'Too short'),
+    confirmPassword: z.string().min(1, 'Required'),
+  })
+  .refine((data) => data.password === data.confirmPassword, {
+    message: "Passwords don't match",
+    path: ['confirmPassword'],
+  });
 
-type LoginFormData = z.infer<typeof loginSchema>;
+type RegisterFormData = z.infer<typeof registerSchema>;
 
-export default function StaffLoginPage() {
+export default function StaffRegisterPage() {
   const router = useRouter();
-  const { login } = useAuth();
+  const { register: registerUser } = useAuth();
   const { t } = useLanguage();
   const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
 
@@ -33,26 +41,26 @@ export default function StaffLoginPage() {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<LoginFormData>({
-    resolver: zodResolver(loginSchema),
-    defaultValues: { email: '', password: '' }, // Prevents uncontrolled-to-controlled warnings
+  } = useForm<RegisterFormData>({
+    resolver: zodResolver(registerSchema),
+    defaultValues: { name: '', email: '', password: '', confirmPassword: '' }, // Prevents uncontrolled-to-controlled warnings
   });
 
-  const onSubmit = async (data: LoginFormData) => {
+  const onSubmit = async (data: RegisterFormData) => {
     if (isLoading) return;
     setError('');
     setIsLoading(true);
-    
+
     try {
-      const result = await login(data.email, data.password);
+      const result = await registerUser(data.name, data.email, data.password);
       if (result.success) {
         router.push('/staff/dashboard');
       } else {
-        setError(result.error || t.staff.login.error);
+        setError(result.error || t.staff.register.error);
         setIsLoading(false);
       }
     } catch (err) {
-      setError(t.staff.login.error);
+      setError(t.staff.register.error);
       setIsLoading(false);
     }
   };
@@ -66,8 +74,8 @@ export default function StaffLoginPage() {
         className="w-full max-w-md"
       >
         {/* Back to Home */}
-        <Link 
-          href="/" 
+        <Link
+          href="/"
           className="inline-flex items-center gap-2 text-white/80 hover:text-white mb-6 transition-colors group"
         >
           <ArrowLeft className="w-4 h-4 transition-transform group-hover:-translate-x-1" />
@@ -81,7 +89,7 @@ export default function StaffLoginPage() {
               <GraduationCap className="w-10 h-10 text-white" />
             </div>
             <h1 className="text-xl font-bold text-text-primary">{academyData.name}</h1>
-            <p className="text-text-secondary text-sm mt-1">{t.staff.login.heading}</p>
+            <p className="text-text-secondary text-sm mt-1">{t.staff.register.heading}</p>
           </div>
 
           {/* Language Switch */}
@@ -89,12 +97,37 @@ export default function StaffLoginPage() {
             <LanguageSwitchLight />
           </div>
 
-          {/* Login Form */}
+          {/* Register Form */}
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-6" noValidate>
+            {/* Name */}
+            <div className="form-group flex flex-col gap-1.5">
+              <label htmlFor="name" className="form-label text-sm font-medium text-text-primary">
+                {t.staff.register.name}
+              </label>
+              <input
+                type="text"
+                id="name"
+                {...register('name')}
+                className={`form-input p-2.5 border rounded-lg outline-none transition-all ${
+                  errors.name ? 'border-red-500 focus:ring-1 focus:ring-red-500' : 'focus:border-primary'
+                }`}
+                placeholder="Jane Doe"
+                autoComplete="name"
+                disabled={isLoading}
+              />
+              {errors.name && (
+                <p className="form-error text-xs text-red-500 font-medium">
+                  {errors.name.message === 'Too short'
+                    ? t.errors?.tooShort || 'Too short'
+                    : t.errors?.required || 'Required'}
+                </p>
+              )}
+            </div>
+
             {/* Email */}
             <div className="form-group flex flex-col gap-1.5">
               <label htmlFor="email" className="form-label text-sm font-medium text-text-primary">
-                {t.staff.login.email}
+                {t.staff.register.email}
               </label>
               <input
                 type="email"
@@ -117,7 +150,7 @@ export default function StaffLoginPage() {
             {/* Password */}
             <div className="form-group flex flex-col gap-1.5">
               <label htmlFor="password" className="form-label text-sm font-medium text-text-primary">
-                {t.staff.login.password}
+                {t.staff.register.password}
               </label>
               <div className="relative">
                 <input
@@ -128,12 +161,12 @@ export default function StaffLoginPage() {
                     errors.password ? 'border-red-500 focus:ring-1 focus:ring-red-500' : 'focus:border-primary'
                   }`}
                   placeholder="••••••••"
-                  autoComplete="current-password"
+                  autoComplete="new-password"
                   disabled={isLoading}
                 />
                 <button
                   type="button"
-                  onClick={() => setShowPassword(prev => !prev)}
+                  onClick={() => setShowPassword((prev) => !prev)}
                   className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors"
                   aria-label={showPassword ? t.staff.login.hidePassword : t.staff.login.showPassword}
                   disabled={isLoading}
@@ -144,7 +177,43 @@ export default function StaffLoginPage() {
               {errors.password && (
                 <p className="form-error text-xs text-red-500 font-medium">
                   {errors.password.message === 'Too short'
-                    ? t.errors?.tooShort || 'Too short'
+                    ? t.errors?.tooShort || 'Password must be at least 8 characters'
+                    : t.errors?.required || 'Required'}
+                </p>
+              )}
+            </div>
+
+            {/* Confirm Password */}
+            <div className="form-group flex flex-col gap-1.5">
+              <label htmlFor="confirmPassword" className="form-label text-sm font-medium text-text-primary">
+                {t.staff.register.confirmPassword}
+              </label>
+              <div className="relative">
+                <input
+                  type={showConfirmPassword ? 'text' : 'password'}
+                  id="confirmPassword"
+                  {...register('confirmPassword')}
+                  className={`form-input w-full p-2.5 border rounded-lg outline-none transition-all pr-12 ${
+                    errors.confirmPassword ? 'border-red-500 focus:ring-1 focus:ring-red-500' : 'focus:border-primary'
+                  }`}
+                  placeholder="••••••••"
+                  autoComplete="new-password"
+                  disabled={isLoading}
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowConfirmPassword((prev) => !prev)}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors"
+                  aria-label={showConfirmPassword ? t.staff.login.hidePassword : t.staff.login.showPassword}
+                  disabled={isLoading}
+                >
+                  {showConfirmPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
+                </button>
+              </div>
+              {errors.confirmPassword && (
+                <p className="form-error text-xs text-red-500 font-medium">
+                  {errors.confirmPassword.message === "Passwords don't match"
+                    ? t.errors?.passwordMismatch || "Passwords don't match"
                     : t.errors?.required || 'Required'}
                 </p>
               )}
@@ -174,22 +243,21 @@ export default function StaffLoginPage() {
               {isLoading ? (
                 <>
                   <Loader2 className="w-5 h-5 animate-spin" />
-                  <span>{t.staff.login.loggingIn}</span>
+                  <span>{t.staff.register.registering}</span>
                 </>
               ) : (
-                <span>{t.staff.login.loginButton}</span>
+                <span>{t.staff.register.registerButton}</span>
               )}
             </button>
           </form>
 
-          {/* Demo Credentials Note */}
-          <div className="mt-6 p-4 bg-blue-50 border border-blue-100 rounded-lg">
-            <p className="text-sm text-blue-700 text-center leading-relaxed">
-              <strong className="font-semibold">Demo Credentials:</strong><br />
-              Email: <span className="select-all font-mono">admin@stylishenglish.com</span><br />
-              Password: <span className="select-all font-mono">admin123</span>
-            </p>
-          </div>
+          {/* Link to Login */}
+          <p className="text-center text-sm text-text-secondary mt-6">
+            {t.staff.register.haveAccount}{' '}
+            <Link href="/staff/login" className="text-primary font-medium hover:underline">
+              {t.staff.register.loginLink}
+            </Link>
+          </p>
         </div>
 
         {/* Copyright */}

@@ -360,6 +360,7 @@ export const academyData = {
     { id: 'presentations', en: 'Student Presentations', ta: 'மாணவர் விளக்கவுரைகள்' },
     { id: 'communication', en: 'Communication Programs', ta: 'தொடர்புத் திறன் நிகழ்வுகள்' },
     { id: 'events', en: 'Special Events', ta: 'சிறப்பு நிகழ்வுகள்' },
+    {id: 'group-discussion' , en:" Group Discussion " , ta:""}
   ],
 
   // Sample gallery images (replace with actual images)

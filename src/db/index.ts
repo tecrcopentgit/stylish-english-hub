@@ -1,13 +1,49 @@
+"use server";
+
 import { drizzle } from "drizzle-orm/neon-http";
 import { neon } from "@neondatabase/serverless";
+import { sql as drizzleSqlHelper } from "drizzle-orm";
 
-// 1. Check for the string or provide a safe placeholder URI to bypass build crashes
-const databaseUrl = process.env.DATABASE_URL || "postgresql://mock_user:mock_pass@localhost:5432/mock_db";
+// 1. EMBEDDED PRODUCTION CONNECTION STRING
+const DATABASE_URL = "postgresql://neondb_owner:npg_WdLYJcXm6g1r@ep-young-river-ahzoi6r4-pooler.c-3.us-east-1.aws.neon.tech/neondb?sslmode=require&channel_binding=require";
 
-if (!process.env.DATABASE_URL && process.env.NODE_ENV === "production") {
-  console.warn("⚠️ Warning: DATABASE_URL environment variable is missing during build time.");
+// 2. SAFE CLIENT INITIALIZATION
+const client = neon(DATABASE_URL);
+export const db = drizzle(client);
+
+// 3. NEXT.JS SERVER ACTION FOR FETCHING DATA
+export async function getData() {
+  try {
+    // Executes raw SQL templates safely using the unified client
+    const data = await db.execute(drizzleSqlHelper`SELECT * FROM your_table_name`);
+    
+    return { success: true, data: data.rows };
+  } catch (error) {
+    console.error("Database query failed:", error);
+    return { success: false, error: "Failed to fetch data" };
+  }
 }
 
-// 2. Safely initialize the client connection
-const client = neon(databaseUrl);
-export const db = drizzle({ client });
+// 4. SERVER ACTION: SAVE WHATSAPP FORM DATA TO DATABASE
+export async function saveEnquiry(formData: {
+  studentName: string;
+  parentName: string;
+  className: string;
+  phone: string;
+  program?: string;
+  shift?: string;
+  message?: string;
+}) {
+  try {
+    // Executes raw SQL insert query matching your React form layout
+    await db.execute(drizzleSqlHelper`
+      INSERT INTO enquiries (student_name, parent_name, class_name, phone, program, shift, message)
+      VALUES (${formData.studentName}, ${formData.parentName}, ${formData.className}, ${formData.phone}, ${formData.program || null}, ${formData.shift || null}, ${formData.message || null})
+    `);
+    
+    return { success: true };
+  } catch (error) {
+    console.error("Failed to save enquiry:", error);
+    return { success: false, error: "Failed to save submission" };
+  }
+}

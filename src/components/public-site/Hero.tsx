@@ -55,10 +55,10 @@ export default function Hero() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.2 }}
             className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold text-white mb-6 leading-tight "
-          >
+          data-aos='zoom-in'>
             
-            <span className=" text-5xl" data-aos='zoom-in'>STYLISH ENGLISH</span>
-            <span className="block text-accent text-xl ">KNOWLEDGE HUB</span>
+            <span className=" text-5xl text-blue-500" data-aos='zoom-in'>STYLISH ENGLISH</span>
+            <span className="block text-amber-400 text-xl ">KNOWLEDGE HUB</span>
             <div className='flex  items-center justify-center '><Image className=' h-20 w-20 rounded-full shadow-xl shadow-blue-200' src = {academy_logo} alt = ''/></div>
           </motion.h1>
 

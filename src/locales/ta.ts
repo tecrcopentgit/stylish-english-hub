@@ -177,7 +177,7 @@ export const ta = {
 
   // WhatsApp Messages
   whatsapp: {
-    defaultMessage: 'வணக்கம் Stylish English Academy. உங்கள் பயிற்சிகள் மற்றும் மாணவர் சேர்க்கை விவரங்களைப் பற்றி மேலும் தெரிந்துகொள்ள விரும்புகிறேன்.',
+    defaultMessage: 'அஸ்ஸலாமு அலைக்கும் Stylish English Academy. உங்களோட பயிற்சிகள் (Courses) மற்றும் அட்மிஷன் விபரங்களை இன்ஷா அல்லாஹ் கொஞ்சம் விபரமா தெரிஞ்சுக்க ஆசைப்படுறேன்',
   },
 
   // Staff Portal

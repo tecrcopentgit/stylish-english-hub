@@ -4,7 +4,6 @@ import { db } from '@/db';
 import { students, attendance, payments } from '@/db/schema';
 import { eq, sql, and } from 'drizzle-orm';
 
-// Prevents Next.js from evaluating database logic during static build compilation
 export const dynamic = 'force-dynamic';
 
 export async function GET() {
@@ -18,16 +17,17 @@ export async function GET() {
     const today = new Date().toISOString().split('T')[0];
 
     // Get total active students
-    const [{ count: totalStudents }] = await db
-      .select({ count: sql<number>`count(*)` })
+    const totalStudentsResult = await db
+      .select({ count: sql<number>`cast(count(*) as integer)` })
       .from(students)
       .where(eq(students.status, 'active'));
+    const totalStudents = totalStudentsResult[0]?.count || 0;
 
     // Get today's attendance stats
     const attendanceStats = await db
       .select({
         status: attendance.status,
-        count: sql<number>`count(*)`,
+        count: sql<number>`cast(count(*) as integer)`,
       })
       .from(attendance)
       .where(eq(attendance.date, today))
@@ -41,56 +41,55 @@ export async function GET() {
     for (const stat of attendanceStats) {
       switch (stat.status) {
         case 'P':
-          presentToday = Number(stat.count);
+          presentToday = Number(stat.count) || 0;
           break;
         case 'A':
-          absentToday = Number(stat.count);
+          absentToday = Number(stat.count) || 0;
           break;
         case 'L':
-          leaveToday = Number(stat.count);
+          leaveToday = Number(stat.count) || 0;
           break;
         case 'LT':
-          lateToday = Number(stat.count);
+          lateToday = Number(stat.count) || 0;
           break;
       }
     }
 
     const markedToday = presentToday + absentToday + leaveToday + lateToday;
-    const notMarked = Number(totalStudents) - markedToday;
+    const notMarked = totalStudents - markedToday;
 
     // Get current month's fee collection
     const currentMonth = new Date().toISOString().slice(0, 7); // YYYY-MM
     
-    const [{ total: feesCollected }] = await db
-      .select({ total: sql<number>`COALESCE(SUM(amount_paid), 0)` })
+    const feesResult = await db
+      .select({ total: sql<number>`cast(COALESCE(SUM(amount_paid), 0) as numeric)` })
       .from(payments)
       .where(sql`to_char(payment_date, 'YYYY-MM') = ${currentMonth}`);
+    const feesCollected = feesResult[0]?.total || 0;
 
     // Get pending payments count
-    const [{ count: pendingFees }] = await db
-      .select({ count: sql<number>`count(*)` })
+    const pendingCountResult = await db
+      .select({ count: sql<number>`cast(count(*) as integer)` })
       .from(payments)
-      .where(
-        and(
-          eq(payments.paymentStatus, 'pending'),
-        )
-      );
+      .where(eq(payments.paymentStatus, 'pending'));
+    const pendingFees = pendingCountResult[0]?.count || 0;
 
     // Get total pending amount
-    const [{ total: totalPending }] = await db
-      .select({ total: sql<number>`COALESCE(SUM(pending_balance), 0)` })
+    const totalPendingResult = await db
+      .select({ total: sql<number>`cast(COALESCE(SUM(pending_balance), 0) as numeric)` })
       .from(payments)
       .where(sql`pending_balance > 0`);
+    const totalPending = totalPendingResult[0]?.total || 0;
 
     return NextResponse.json({
-      totalStudents: Number(totalStudents),
+      totalStudents,
       presentToday,
       absentToday,
       leaveToday,
       notMarked: Math.max(0, notMarked),
-      feesCollected: Number(feesCollected) || 0,
-      pendingFees: Number(pendingFees) || 0,
-      totalPending: Number(totalPending) || 0,
+      feesCollected: Number(feesCollected),
+      pendingFees: Number(pendingFees),
+      totalPending: Number(totalPending),
     });
   } catch (error) {
     console.error('Dashboard stats error:', error);
@@ -103,6 +102,6 @@ export async function GET() {
       feesCollected: 0,
       pendingFees: 0,
       totalPending: 0,
-    });
+    }, { status: 500 }); // Return a 500 error status rather than hiding errors behind a fake 200 payload
   }
 }

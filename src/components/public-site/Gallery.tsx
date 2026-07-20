@@ -11,6 +11,7 @@ import reading from '../../assets/images/reading.jpeg';
 import speaking from '../../assets/images/speaking.jpg';
 import events from '../../assets/images/events.jpeg';
 import presentation from '../../assets/images/presentation.jpeg';
+import handwriting from '../../assets/images/handwriting.jpeg'
 import Image from 'next/image';
 
 // Placeholder images until real ones are uploaded
@@ -21,7 +22,8 @@ const placeholderImages = [
   { id: '4', src: speaking,category: 'public-speaking', caption: { en: 'Public Speaking Session', ta: 'மேடைப் பேச்சுப் பயிற்சி' } },
   { id: '5', src: presentation, category: 'presentations', caption: { en: 'Student Presentation', ta: 'மாணவர் விளக்கவுரை' } },
   { id: '6', src:events ,category: 'events', caption: { en: 'Academy Event', ta: 'அகாடமி நிகழ்வு' } },
-  {id:'7' , src:reading , categorty:'spoken-english' , caption: {en:'Hand Writing' , ta:''}}
+  {id:'7' , src:handwriting , category:'hand-writing' , caption: {en:'Hand Writing' , ta:'கையெழுத்துப் பயிற்சி வகுப்பு'}},
+  {id:'8' , src:handwriting , category: 'group-discussion' , caption: { en:"Group Discussion" , ta: "குழு விவாதம் "}}
 ];
 
 export default function Gallery() {
@@ -106,7 +108,7 @@ export default function Gallery() {
         </motion.div>
 
         {/* Gallery Grid */}
-        <div className="gallery-grid">
+        <div className="grid gap-2 grid-cols-1 md:grid-cols-3 lg:grid-cols-4 ">
           {filteredImages.map((image, index) => (
             <motion.div
               key={image.id}
@@ -114,16 +116,16 @@ export default function Gallery() {
               whileInView={{ opacity: 1, scale: 1 }}
               viewport={{ once: true }}
               transition={{ duration: 0.4, delay: index * 0.05 }}
-              className="gallery-item"
+              className=""
               onClick={() => openLightbox(index)}
               role="button"
               tabIndex={0}
               onKeyDown={(e) => e.key === 'Enter' && openLightbox(index)}
               aria-label={`View ${image.caption[language]}`}
             >
-              {/* Placeholder for image */}
-              <div className="w-full h-full bg-gradient-to-br from-primary/20 to-primary/10 flex flex-col items-center justify-center">
-                <Image src={image.src} alt={image.id} />
+              {/* Placeholder for image */ }
+              <div className=" rounded-xl bg-gradient-to-br from-primary/20 to-primary/10 flex flex-col items-center justify-center">
+                <Image src={image.src} alt={image.id} className='rounded-xl h-50 w-full object-cover'/>
                 <p className="text-sm text-primary/60 text-center px-4">{image.caption[language]}</p>
               </div>
             </motion.div>

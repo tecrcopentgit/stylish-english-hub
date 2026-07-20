@@ -23,7 +23,7 @@ export default function Leadership() {
           <h2 className="section-heading">{t.leadership.heading}</h2>
         </motion.div>
 
-        <div className="grid md:grid-cols-2 gap-8 max-w-5xl mx-auto">
+        <div className="grid md:grid-cols-1 gap-8 max-w-5xl mx-auto">
           {academyData.leadership.map((leader, index) => (
             <motion.div
               key={leader.id}
@@ -31,37 +31,40 @@ export default function Leadership() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: '-50px' }}
               transition={{ duration: 0.6, delay: index * 0.2 }}
-              className="card overflow-hidden"
+              className="card overflow-hidden "
             >
-              <div className="card h-full overflow-hidden group">
+              <div className="  h-full overflow-hidden group">
   {/* Image Layout Wrapper */}
-  <div className={ `relative h-64 bg-gradient-to-br from-primary/10 to-primary/5 overflow-hidden`}>
-    <div className="absolute inset-0">
-      <Image 
+{/* Image Layout Wrapper */}
+<div className="relative h-72 bg-gradient-to-br from-primary to-primary/80 overflow-hidden">
+  {/* Center Image */}
+  <div className="absolute inset-0 flex items-center justify-center">
+    <div className="relative w-48 h-48">
+      <Image
         src={leader.image}
         alt={leader.name}
         fill
-        sizes={` (max-width: 768px) 100vw, (max-width: 1200px) 50vw, 25vw `}
-        className={ `group-hover:scale-105 transition-transform duration-300 bg-black`} 
+        sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 25vw"
+        className="rounded-full object-cover border-4 border-white shadow-xl transition-transform duration-300 group-hover:scale-105"
       />
+
+      {/* Experience Badge */}
+      {leader.experiece_in_number && (
+        <div className="absolute -bottom-3 -right-3 z-10">
+          <div className="flex items-center gap-1 rounded-full bg-amber-500 px-3 py-1.5 shadow-lg border-2 border-white">
+            <Award className="w-4 h-4 text-white" />
+            <span className="text-xs font-bold text-white whitespace-nowrap">
+              {leader.experiece_in_number}+ Years
+            </span>
+          </div>
+        </div>
+      )}
     </div>
-    {/* Gradient Overlay on Hover */}
-    <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-    
-    {/* Floating Badge (Repositioned into the image frame) */}
-    <div className="absolute bottom-3 right-3 left-2 w-10 h-10  rounded-xl flex flex-row items-center justify-center shadow-lg m-2  z-10"> 
-      <div className='flex flex-row bg-accent/70  rounded-xl p-2 border border-amber-400 shadow-xl shadow-amber-200 '>
-         <Award className="w-5 h-5 text-accent" /> 
-        {leader.experiece_in_number ? <div className="text-sm flex text-white font-bold"> 
-          
-          <span >{leader.experiece_in_number}</span><span>Years</span> 
-        </div> : ''}
-      </div>
-      
-     
-      
-    </div> 
   </div>
+
+  {/* Hover Overlay */}
+  <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
+</div>
 
   {/* Content */}
   <div className="p-5">
@@ -85,7 +88,7 @@ export default function Leadership() {
       </p> 
       {'experience' in leader && leader.experience && ( 
         <p className="text-sm text-accent font-medium"> 
-          <span className="font-medium text-text-primary">{t.leadership.experience}:</span>{' '} 
+          <span className="font-medium text-text-primary absolute">{t.leadership.experience}:</span>{' '} 
           {leader.experience[language as 'en' | 'ta']} 
         </p> 
       )} 
