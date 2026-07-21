@@ -1,16 +1,8 @@
-// ============================================================
-// ENGLISH TRANSLATIONS
-// ============================================================
-// Edit this file to update English content across the website.
-// ============================================================
-
 export const en = {
-  // Language
   lang: 'en',
   langName: 'English',
   langCode: 'EN',
 
-  // Navigation
   nav: {
     home: 'Home',
     about: 'About',
@@ -24,7 +16,6 @@ export const en = {
     staffLogin: 'Staff Login',
   },
 
-  // Hero Section
   hero: {
     heading: 'Learn Today,',
     headingLine2: 'Lead Tomorrow',
@@ -34,7 +25,6 @@ export const en = {
     trustMessage: 'Academic Learning • English Fluency • Communication Skills • Student Development',
   },
 
-  // About Section
   about: {
     heading: 'About Stylish English Academy',
     description: 'Stylish English Academy is committed to supporting students in their academic learning while developing English communication skills, confidence, creativity, discipline, and leadership qualities.',
@@ -51,7 +41,6 @@ export const en = {
     },
   },
 
-  // Why Choose Us
   whyChooseUs: {
     heading: 'Why Choose Stylish English Academy?',
     features: [
@@ -68,13 +57,11 @@ export const en = {
     ],
   },
 
-  // Programs Section
   programs: {
     heading: 'Our Learning Programs',
     viewDetails: 'Learn More',
   },
 
-  // Learning Structure
   learningStructure: {
     heading: 'Our Learning Structure',
     description: 'A balanced learning schedule designed to support academic growth and communication development.',
@@ -99,7 +86,6 @@ export const en = {
     },
   },
 
-  // Leadership Section
   leadership: {
     heading: 'Meet Our Leadership',
     experience: 'Experience',
@@ -108,7 +94,6 @@ export const en = {
     keyRoles: 'Key Roles',
   },
 
-  // Teachers Section
   teachers: {
     heading: 'Meet Our Teaching Team',
     experience: 'Experience',
@@ -116,7 +101,6 @@ export const en = {
     specialisations: 'Specialisations',
   },
 
-  // Gallery Section
   gallery: {
     heading: 'Learning in Action',
     description: 'Explore classroom learning, communication activities, reading sessions, student presentations, public speaking, and memorable academy moments.',
@@ -124,7 +108,6 @@ export const en = {
     close: 'Close',
   },
 
-  // Contact Section
   contact: {
     heading: 'Start Your Learning Journey Today',
     description: 'Contact Stylish English Academy to learn more about academic tuition, English fluency, communication skills, and student-development programs.',
@@ -140,7 +123,6 @@ export const en = {
     classTimings: 'Class Timings',
   },
 
-  // Enquiry Form
   enquiry: {
     heading: 'Student Enquiry',
     studentName: 'Student Name',
@@ -166,7 +148,6 @@ export const en = {
     selectGrade: 'Select grade/class',
   },
 
-  // Footer
   footer: {
     quickLinks: 'Quick Links',
     ourPrograms: 'Our Programs',
@@ -175,12 +156,10 @@ export const en = {
     tagline: 'Learn Today, Lead Tomorrow',
   },
 
-  // WhatsApp Messages
   whatsapp: {
     defaultMessage: 'Hello Stylish English Academy. I would like to know more about your programs and admission details.',
   },
 
-  // Staff Portal
   staff: {
     login: {
       heading: 'Staff Login',
@@ -194,6 +173,21 @@ export const en = {
       invalidCredentials: 'Invalid email or password',
       error: 'An error occurred. Please try again.',
     },
+
+    // ============ REGISTER BLOCK ADDED ============
+    register: {
+      heading: 'Staff Registration',
+      fullName: 'Full Name',
+      email: 'Work Email',
+      password: 'Password',
+      confirmPassword: 'Confirm Password',
+      button: 'Create Account',
+      hasAccount: 'Already have an account?',
+      error: 'Registration failed. Please try again.',
+      emailExists: 'Email already registered',
+    },
+    // ==============================================
+
     dashboard: {
       heading: 'Dashboard',
       welcome: 'Welcome',
@@ -206,6 +200,7 @@ export const en = {
       pendingFees: 'Pending Fees',
       totalPending: 'Total Pending Amount',
     },
+
     nav: {
       dashboard: 'Dashboard',
       students: 'Student List',
@@ -217,6 +212,7 @@ export const en = {
       settings: 'Settings',
       logout: 'Logout',
     },
+
     students: {
       heading: 'Student List',
       addStudent: 'Add Student',
@@ -247,6 +243,7 @@ export const en = {
       saveSuccess: 'Student saved successfully',
       deleteSuccess: 'Student deactivated successfully',
     },
+
     attendance: {
       heading: 'Attendance',
       selectDate: 'Select Date',
@@ -272,6 +269,7 @@ export const en = {
       messageCopied: 'Message copied to clipboard',
       messageConfirmed: 'Message status updated to Confirmed Sent',
     },
+
     fees: {
       heading: 'Fee Structure',
       addClass: 'Add Class',
@@ -287,6 +285,7 @@ export const en = {
       actions: 'Actions',
       saveSuccess: 'Fee structure saved successfully',
     },
+
     payments: {
       heading: 'Student Payments',
       recordPayment: 'Record Payment',
@@ -316,6 +315,7 @@ export const en = {
       paymentSaved: 'Payment saved successfully',
       viewHistory: 'View History',
     },
+
     reports: {
       heading: 'Reports',
       attendanceReports: 'Attendance Reports',
@@ -345,6 +345,7 @@ export const en = {
       exportPDF: 'Export PDF',
       print: 'Print',
     },
+
     settings: {
       heading: 'Settings',
       profile: 'Profile',
@@ -357,7 +358,12 @@ export const en = {
     },
   },
 
-  // Common
+  errors: {
+    required: 'This field is required',
+    invalidEmail: 'Please enter a valid email',
+    tooShort: 'Too short',
+  },
+
   common: {
     loading: 'Loading...',
     save: 'Save',

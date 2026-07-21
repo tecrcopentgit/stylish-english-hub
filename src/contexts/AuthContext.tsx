@@ -1,109 +1,101 @@
 'use client';
 
-import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
-import { getSessionUser, registerUser, loginUser, logoutUser } from './authActions';
+import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import { useRouter } from 'next/navigation';
+import { getSessionUser, loginUser, logoutUser, registerUser } from '@/lib/db/auth';
 
-export interface User {
-  id: number;
+interface User {
+  id: string;
   email: string;
   name: string;
-  role: 'admin' | 'teacher' | 'account_staff';
-}
-
-export interface Credentials {
-  email: string;
-  password: string;
-  name?: string;
-  role?: 'admin' | 'teacher' | 'account_staff';
+  role: string;
 }
 
 interface AuthContextType {
   user: User | null;
   isLoading: boolean;
-  // Adjusted signature to support object payload or distinct multi-arguments
-  login: (emailOrCredentials: string | Credentials, password?: string) => Promise<{ success: boolean; error?: string }>;
-  signup: (credentials: Credentials) => Promise<{ success: boolean; error?: string }>;
+  login: (email: string, password: string) => Promise<{ success: boolean; error?: string }>;
+  register: (data: { fullName?: string; email: string; password: string }) => Promise<{ success: boolean; error?: string }>;
   logout: () => Promise<void>;
-  checkAuth: () => Promise<void>;
 }
-
- const mapToUser = (rawUser: Record<string, unknown> | null | undefined): User | null => {
-    if (!rawUser) return null;
-    return {
-      id: Number(rawUser.id),
-      email: String(rawUser.email || ''),
-      name: String(rawUser.name || ''),
-      role: (rawUser.role as User['role']) || 'teacher',
-    };
-  };
-
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState(true);
-
-  const checkAuth = async () => {
-    try {
-      const currentUser = await getSessionUser();
-      setUser(currentUser as User | null);
-    } catch (error) {
-      setUser(null);
-    } finally {
-      setIsLoading(false);
-    }
-  };
+  const router = useRouter();
 
   useEffect(() => {
+    const checkAuth = async () => {
+      try {
+        const session = await getSessionUser();
+        if (session && session.id && session.email) {
+          setUser({
+            id: session.id,
+            email: session.email,
+            name: "Staff",
+            role: session.role,
+          });
+        }
+      } catch {
+        // Silent fail on auth check
+      } finally {
+        setIsLoading(false);
+      }
+    };
     checkAuth();
   }, []);
 
-  const login = async (emailOrCredentials: string | Credentials, password?: string) => {
+  const login = async (email: string, password: string) => {
     try {
-      // Normalize arguments to ensure compatibility with both signature styles
-      const payload: Credentials = 
-        typeof emailOrCredentials === 'string' 
-          ? { email: emailOrCredentials, password: password || '' } 
-          : emailOrCredentials;
-
-      const res = await loginUser(payload);
-      
-      if (res.success && res.user) {
-        setUser( mapToUser(res.user));
+      const result = await loginUser({ email, password });
+      if (result.success && result.user) {
+        setUser({
+          id: result.user.id,
+          email: result.user.email,
+          name: result.user.name || "Staff",
+          role: result.user.role,
+        });
         return { success: true };
       }
-      return { success: false, error: res.error || 'Login failed' };
-    } catch (error) {
-      return { success: false, error: error instanceof Error ? error.message : 'An unexpected error occurred' };
+      return { success: false, error: result.error || "Login failed" };
+    } catch (err: any) {
+      return { success: false, error: err?.message || "Network error" };
     }
   };
 
-  const signup = async (credentials: Credentials) => {
+  const register = async (data: { fullName?: string; email: string; password: string }) => {
     try {
-      const res = await registerUser(credentials);
-      if (res.success && res.user) {
-        setUser(mapToUser(res.user));
+      const result = await registerUser({
+        email: data.email,
+        password: data.password,
+        fullName: data.fullName,
+        role: "staff",
+      });
+      if (result.success && result.user) {
+        setUser({
+          id: result.user.id,
+          email: result.user.email,
+          name: result.user.name || "Staff",
+          role: result.user.role,
+        });
         return { success: true };
       }
-      return { success: false, error: res.error || 'Registration failed' };
-    } catch (error) {
-      return { success: false, error: error instanceof Error ? error.message : 'An unexpected error occurred' };
+      return { success: false, error: result.error || "Registration failed" };
+    } catch (err: any) {
+      return { success: false, error: err?.message || "Network error" };
     }
   };
 
   const logout = async () => {
-    try {
-      await logoutUser();
-    } catch (error) {
-      console.error('Error during logout execution:', error);
-    } finally {
-      setUser(null);
-    }
+    await logoutUser();
+    setUser(null);
+    router.push('/staff/login');
   };
 
   return (
-    <AuthContext.Provider value={{ user, isLoading, login, signup, logout, checkAuth }}>
+    <AuthContext.Provider value={{ user, isLoading, login, register, logout }}>
       {children}
     </AuthContext.Provider>
   );

@@ -53,20 +53,21 @@ export default function FeesPage() {
   useEffect(() => {
     fetchFeeStructures();
   }, []);
-
-  const fetchFeeStructures = async () => {
-    try {
-      const response = await fetch('/api/staff/fees');
-      if (response.ok) {
-        const data = await response.json();
-        setFeeStructures(data.fees || []);
-      }
-    } catch (error) {
-      console.error('Error fetching fee structures:', error);
-    } finally {
-      setIsLoading(false);
+const fetchFeeStructures = async () => {
+  try {
+    const response = await fetch('/api/staff/fees', {
+      credentials: 'include',          // ← 👈 Add this
+    });
+    if (response.ok) {
+      const data = await response.json();
+      setFeeStructures(data.fees || []);
     }
-  };
+  } catch (error) {
+    console.error('Error fetching fee structures:', error);
+  } finally {
+    setIsLoading(false);
+  }
+};
 
   const openAddModal = () => {
     setEditingFee(null);
@@ -94,31 +95,26 @@ export default function FeesPage() {
     setIsModalOpen(true);
   };
 
-  const onSubmit = async (data: FeeFormData) => {
-    try {
-      const url = editingFee
-        ? `/api/staff/fees/${editingFee.id}`
-        : '/api/staff/fees';
-      
-      const response = await fetch(url, {
-        method: editingFee ? 'PUT' : 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          ...data,
-          totalFee: totalFee.toString(),
-        }),
-      });
-
-      if (response.ok) {
-        setIsModalOpen(false);
-        setSuccessMessage(t.staff.fees.saveSuccess);
-        setTimeout(() => setSuccessMessage(''), 3000);
-        fetchFeeStructures();
-      }
-    } catch (error) {
-      console.error('Error saving fee structure:', error);
-    }
-  };
+ const onSubmit = async (data: FeeFormData) => {
+  try {
+    const url = editingFee
+      ? `/api/staff/fees/${editingFee.id}`
+      : '/api/staff/fees';
+    
+    const response = await fetch(url, {
+      method: editingFee ? 'PUT' : 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      credentials: 'include',          // ← 👈 Add this
+      body: JSON.stringify({
+        ...data,
+        totalFee: totalFee.toString(),
+      }),
+    });
+    // ... rest stays the same
+  } catch (error) {
+    console.error('Error saving fee structure:', error);
+  }
+};
 
   return (
     <div>

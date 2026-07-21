@@ -1,16 +1,23 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { getSession } from '@/lib/auth';
+import { getSessionUser } from '@/lib/db/auth';
 import { db } from '@/db';
 import { feeStructure } from '@/db/schema';
 import { asc } from 'drizzle-orm';
 
+
+
 // Prevents Next.js from attempting to statically generate or validate DB calls at build time
 export const dynamic = 'force-dynamic';
 
+
 export async function GET() {
-  const session = await getSession();
+  const session = await getSessionUser();
+  console.log('POST session:', session);
+
+  
   
   if (!session) {
+    
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
 
@@ -28,7 +35,7 @@ export async function GET() {
 }
 
 export async function POST(request: NextRequest) {
-  const session = await getSession();
+  const session = await getSessionUser();
   
   if (!session || session.role !== 'admin') {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });

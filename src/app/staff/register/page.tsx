@@ -1,41 +1,44 @@
+// app/staff/register/page.tsx
 'use client';
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { motion, AnimatePresence } from 'framer-motion';
-import { GraduationCap, Eye, EyeOff, Loader2, AlertCircle, ArrowLeft } from 'lucide-react';
+import { GraduationCap, Eye, EyeOff, Loader2, AlertCircle, ArrowLeft, CheckCircle } from 'lucide-react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
+
+// Context & UI Imports
 import { useLanguage } from '@/contexts/LanguageContext';
 import { LanguageSwitchLight } from '@/components/ui/LanguageSwitch';
 import { academyData } from '@/data/academyData';
 
-// ✅ FIX 1: Import the server action directly instead of using useAuth()
+// Secure Server Action Import
 import { registerUser } from '@/lib/db/auth';
 
-// ✅ FIX 2: Changed 'name' to 'fullName' to match the backend expectations
-const registerSchema = z
-  .object({
-    fullName: z.string().min(1, 'Required').min(2, 'Too short'),
-    email: z.string().min(1, 'Required').email('Invalid'),
-    password: z.string().min(1, 'Required').min(8, 'Too short'),
-    confirmPassword: z.string().min(1, 'Required'),
-  })
-  .refine((data) => data.password === data.confirmPassword, {
-    message: "Passwords don't match",
-    path: ['confirmPassword'],
-  });
+// Validation Schema with password matching
+const registerSchema = z.object({
+  fullName: z.string().min(2, 'Name must be at least 2 characters'),
+  email: z.string().min(1, 'Email is required').email('Invalid email address'),
+  password: z.string().min(6, 'Password must be at least 6 characters'),
+  confirmPassword: z.string().min(1, 'Please confirm your password'),
+}).refine((data) => data.password === data.confirmPassword, {
+  message: "Passwords don't match",
+  path: ["confirmPassword"],
+});
 
 type RegisterFormData = z.infer<typeof registerSchema>;
 
 export default function StaffRegisterPage() {
   const router = useRouter();
   const { t } = useLanguage();
+  
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [error, setError] = useState('');
+  const [success, setSuccess] = useState('');
   const [isLoading, setIsLoading] = useState(false);
 
   const {
@@ -44,16 +47,22 @@ export default function StaffRegisterPage() {
     formState: { errors },
   } = useForm<RegisterFormData>({
     resolver: zodResolver(registerSchema),
-    defaultValues: { fullName: '', email: '', password: '', confirmPassword: '' },
+    defaultValues: { 
+      fullName: '', 
+      email: '', 
+      password: '', 
+      confirmPassword: '' 
+    },
   });
 
   const onSubmit = async (data: RegisterFormData) => {
     if (isLoading) return;
     setError('');
+    setSuccess('');
     setIsLoading(true);
-
+    
     try {
-      // ✅ FIX 3: Call the server action directly with the correct object structure
+      // Call the Server Action directly (No fetch needed!)
       const result = await registerUser({
         fullName: data.fullName,
         email: data.email,
@@ -61,16 +70,18 @@ export default function StaffRegisterPage() {
       });
 
       if (result.success) {
-        // The backend automatically sets the secure cookie, 
-        // so we can redirect straight to the dashboard!
-        router.push('/staff/dashboard');
+        setSuccess('Registration successful! Redirecting to login...');
+        // Redirect to login page after a short delay so they can see the success message
+        setTimeout(() => {
+          router.push('/staff/login');
+        }, 2000);
       } else {
-        setError(result.error || t.staff.register.error);
+        setError(result.error || t.staff.register?.error || 'Registration failed');
         setIsLoading(false);
       }
     } catch (err) {
-      console.error("Registration error:", err);
-      setError(t.staff.register.error);
+      console.error('Registration error:', err);
+      setError(t.staff.register?.error || 'An unexpected error occurred');
       setIsLoading(false);
     }
   };
@@ -83,23 +94,23 @@ export default function StaffRegisterPage() {
         transition={{ duration: 0.5 }}
         className="w-full max-w-md"
       >
-        {/* Back to Home */}
-        <Link
-          href="/"
+        {/* Back to Login */}
+        <Link 
+          href="/staff/login" 
           className="inline-flex items-center gap-2 text-white/80 hover:text-white mb-6 transition-colors group"
         >
           <ArrowLeft className="w-4 h-4 transition-transform group-hover:-translate-x-1" />
-          <span>{t.common.back}</span>
+          <span>{t.common?.backToLogin || 'Back to Login'}</span>
         </Link>
 
         <div className="card p-8 bg-white rounded-xl shadow-xl">
-          {/* Logo */}
+          {/* Logo & Heading */}
           <div className="flex flex-col items-center mb-8">
             <div className="w-16 h-16 bg-primary rounded-xl flex items-center justify-center mb-4 shadow-md">
               <GraduationCap className="w-10 h-10 text-white" />
             </div>
             <h1 className="text-xl font-bold text-text-primary">{academyData.name}</h1>
-            <p className="text-text-secondary text-sm mt-1">{t.staff.register.heading}</p>
+            <p className="text-text-secondary text-sm mt-1">{t.staff.register?.heading || 'Create Staff Account'}</p>
           </div>
 
           {/* Language Switch */}
@@ -108,12 +119,12 @@ export default function StaffRegisterPage() {
           </div>
 
           {/* Register Form */}
-          <form onSubmit={handleSubmit(onSubmit)} className="space-y-6" noValidate>
+          <form onSubmit={handleSubmit(onSubmit)} className="space-y-5" noValidate>
             
-            {/* ✅ FIX 4: Updated field to 'fullName' */}
+            {/* Full Name */}
             <div className="form-group flex flex-col gap-1.5">
               <label htmlFor="fullName" className="form-label text-sm font-medium text-text-primary">
-                {t.staff.register.fullName}
+                {t.staff.register?.fullName || 'Full Name'}
               </label>
               <input
                 type="text"
@@ -122,23 +133,19 @@ export default function StaffRegisterPage() {
                 className={`form-input p-2.5 border rounded-lg outline-none transition-all ${
                   errors.fullName ? 'border-red-500 focus:ring-1 focus:ring-red-500' : 'focus:border-primary'
                 }`}
-                placeholder="Jane Doe"
+                placeholder="John Doe"
                 autoComplete="name"
                 disabled={isLoading}
               />
               {errors.fullName && (
-                <p className="form-error text-xs text-red-500 font-medium">
-                  {errors.fullName.message === 'Too short'
-                    ? t.errors?.tooShort || 'Too short'
-                    : t.errors?.required || 'Required'}
-                </p>
+                <p className="form-error text-xs text-red-500 font-medium">{errors.fullName.message}</p>
               )}
             </div>
 
             {/* Email */}
             <div className="form-group flex flex-col gap-1.5">
               <label htmlFor="email" className="form-label text-sm font-medium text-text-primary">
-                {t.staff.register.email}
+                {t.staff.register?.email || 'Email Address'}
               </label>
               <input
                 type="email"
@@ -152,16 +159,14 @@ export default function StaffRegisterPage() {
                 disabled={isLoading}
               />
               {errors.email && (
-                <p className="form-error text-xs text-red-500 font-medium">
-                  {errors.email.type === 'email' ? t.errors?.invalidEmail || 'Invalid email' : t.errors?.required || 'Required'}
-                </p>
+                <p className="form-error text-xs text-red-500 font-medium">{errors.email.message}</p>
               )}
             </div>
 
             {/* Password */}
             <div className="form-group flex flex-col gap-1.5">
               <label htmlFor="password" className="form-label text-sm font-medium text-text-primary">
-                {t.staff.register.password}
+                {t.staff.register?.password || 'Password'}
               </label>
               <div className="relative">
                 <input
@@ -177,27 +182,23 @@ export default function StaffRegisterPage() {
                 />
                 <button
                   type="button"
-                  onClick={() => setShowPassword((prev) => !prev)}
+                  onClick={() => setShowPassword(prev => !prev)}
                   className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors"
-                  aria-label={showPassword ? t.staff.login.hidePassword : t.staff.login.showPassword}
+                  aria-label={showPassword ? 'Hide password' : 'Show password'}
                   disabled={isLoading}
                 >
                   {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
                 </button>
               </div>
               {errors.password && (
-                <p className="form-error text-xs text-red-500 font-medium">
-                  {errors.password.message === 'Too short'
-                    ? 'Password must be at least 8 characters'
-                    : t.errors?.required || 'Required'}
-                </p>
+                <p className="form-error text-xs text-red-500 font-medium">{errors.password.message}</p>
               )}
             </div>
 
             {/* Confirm Password */}
             <div className="form-group flex flex-col gap-1.5">
               <label htmlFor="confirmPassword" className="form-label text-sm font-medium text-text-primary">
-                {t.staff.register.confirmPassword}
+                {t.staff.register?.confirmPassword || 'Confirm Password'}
               </label>
               <div className="relative">
                 <input
@@ -213,27 +214,24 @@ export default function StaffRegisterPage() {
                 />
                 <button
                   type="button"
-                  onClick={() => setShowConfirmPassword((prev) => !prev)}
+                  onClick={() => setShowConfirmPassword(prev => !prev)}
                   className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors"
-                  aria-label={showConfirmPassword ? t.staff.login.hidePassword : t.staff.login.showPassword}
+                  aria-label={showConfirmPassword ? 'Hide password' : 'Show password'}
                   disabled={isLoading}
                 >
                   {showConfirmPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
                 </button>
               </div>
               {errors.confirmPassword && (
-                <p className="form-error text-xs text-red-500 font-medium">
-                  {errors.confirmPassword.message === "Passwords don't match"
-                    ? t.errors?.passwordMismatch || "Passwords don't match"
-                    : t.errors?.required || 'Required'}
-                </p>
+                <p className="form-error text-xs text-red-500 font-medium">{errors.confirmPassword.message}</p>
               )}
             </div>
 
-            {/* Error Message */}
+            {/* Messages (Error & Success) */}
             <AnimatePresence mode="wait">
               {error && (
                 <motion.div
+                  key="error"
                   initial={{ opacity: 0, height: 0 }}
                   animate={{ opacity: 1, height: 'auto' }}
                   exit={{ opacity: 0, height: 0 }}
@@ -241,6 +239,18 @@ export default function StaffRegisterPage() {
                 >
                   <AlertCircle className="w-5 h-5 flex-shrink-0" />
                   <p className="text-sm font-medium">{error}</p>
+                </motion.div>
+              )}
+              {success && (
+                <motion.div
+                  key="success"
+                  initial={{ opacity: 0, height: 0 }}
+                  animate={{ opacity: 1, height: 'auto' }}
+                  exit={{ opacity: 0, height: 0 }}
+                  className="flex items-center gap-2 p-4 bg-green-50 text-green-700 rounded-lg overflow-hidden"
+                >
+                  <CheckCircle className="w-5 h-5 flex-shrink-0" />
+                  <p className="text-sm font-medium">{success}</p>
                 </motion.div>
               )}
             </AnimatePresence>
@@ -254,20 +264,19 @@ export default function StaffRegisterPage() {
               {isLoading ? (
                 <>
                   <Loader2 className="w-5 h-5 animate-spin" />
-                  {/* ✅ FIX 5: Updated translation key to 'creating' */}
-                  <span>{t.staff.register.creating}</span>
+                  <span>{t.staff.register?.creating || 'Creating Account...'}</span>
                 </>
               ) : (
-                <span>{t.staff.register.registerButton}</span>
+                <span>{t.staff.register?.registerButton || 'Create Account'}</span>
               )}
             </button>
           </form>
 
-          {/* Link to Login */}
+          {/* Login Link */}
           <p className="text-center text-sm text-text-secondary mt-6">
-            {t.staff.register.haveAccount}{' '}
-            <Link href="/staff-login" className="text-primary font-medium hover:underline">
-              {t.staff.register.loginLink}
+            {t.staff.register?.haveAccount || 'Already have an account?'}{' '}
+            <Link href="/staff/login" className="text-primary font-semibold hover:underline">
+              {t.staff.register?.loginLink || 'Sign in here'}
             </Link>
           </p>
         </div>

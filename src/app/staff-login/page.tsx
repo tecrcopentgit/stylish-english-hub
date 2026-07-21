@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { motion, AnimatePresence } from 'framer-motion';
-import { GraduationCap, Eye, EyeOff, Loader2, AlertCircle, ArrowLeft } from 'lucide-react';
+import { GraduationCap, Eye, EyeOff, Loader2, AlertCircle, ArrowLeft, UserPlus } from 'lucide-react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
@@ -13,7 +13,6 @@ import { useLanguage } from '@/contexts/LanguageContext';
 import { LanguageSwitchLight } from '@/components/ui/LanguageSwitch';
 import { academyData } from '@/data/academyData';
 
-// Moved out of component to prevent re-instantiation on renders
 const loginSchema = z.object({
   email: z.string().min(1, 'Required').email('Invalid'),
   password: z.string().min(1, 'Required'),
@@ -35,7 +34,7 @@ export default function StaffLoginPage() {
     formState: { errors },
   } = useForm<LoginFormData>({
     resolver: zodResolver(loginSchema),
-    defaultValues: { email: '', password: '' }, // Prevents uncontrolled-to-controlled warnings
+    defaultValues: { email: '', password: '' },
   });
 
   const onSubmit = async (data: LoginFormData) => {
@@ -44,15 +43,17 @@ export default function StaffLoginPage() {
     setIsLoading(true);
     
     try {
+      // Responds to src/lib/db/auth.ts via useAuth context
       const result = await login(data.email, data.password);
+      
       if (result.success) {
         router.push('/staff/dashboard');
       } else {
-        setError(result.error || t.staff.login.error);
+        setError(result.error || t.staff.login.error || 'Login failed');
         setIsLoading(false);
       }
-    } catch (err) {
-      setError(t.staff.login.error);
+    } catch (err: any) {
+      setError(err?.message || t.staff.login.error || 'Login failed');
       setIsLoading(false);
     }
   };
@@ -76,7 +77,7 @@ export default function StaffLoginPage() {
 
         <div className="card p-8 bg-white rounded-xl shadow-xl">
           {/* Logo */}
-          <div className="flex flex-col items-center mb-8">
+          <div className="flex flex-col items-center mb-6">
             <div className="w-16 h-16 bg-primary rounded-xl flex items-center justify-center mb-4 shadow-md">
               <GraduationCap className="w-10 h-10 text-white" />
             </div>
@@ -89,8 +90,35 @@ export default function StaffLoginPage() {
             <LanguageSwitchLight />
           </div>
 
+          {/* Register Link for New Users */}
+          <div className="mb-6 p-4 bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-100 rounded-xl text-center">
+            <p className="text-sm text-blue-800 font-medium mb-2">
+              New staff member?
+            </p>
+            <Link 
+              href="/staff/register"
+              className="inline-flex items-center justify-center gap-2 px-4 py-2 bg-white border border-blue-200 text-primary rounded-lg hover:bg-blue-50 hover:shadow-sm transition-all font-semibold text-sm"
+            >
+              <UserPlus className="w-4 h-4" />
+              Create Staff Account
+            </Link>
+            <p className="text-xs text-blue-600 mt-3">
+              Don't have login credentials? <Link href="/staff/register" className="underline font-medium hover:text-blue-800">Register here</Link>
+            </p>
+          </div>
+
+          {/* Divider */}
+          <div className="relative mb-6">
+            <div className="absolute inset-0 flex items-center" aria-hidden="true">
+              <div className="w-full border-t border-gray-200"></div>
+            </div>
+            <div className="relative flex justify-center">
+              <span className="bg-white px-3 text-xs text-gray-400 font-medium uppercase tracking-wider">Existing User</span>
+            </div>
+          </div>
+
           {/* Login Form */}
-          <form onSubmit={handleSubmit(onSubmit)} className="space-y-6" noValidate>
+          <form onSubmit={handleSubmit(onSubmit)} className="space-y-5" noValidate>
             {/* Email */}
             <div className="form-group flex flex-col gap-1.5">
               <label htmlFor="email" className="form-label text-sm font-medium text-text-primary">
@@ -100,16 +128,16 @@ export default function StaffLoginPage() {
                 type="email"
                 id="email"
                 {...register('email')}
-                className={`form-input p-2.5 border rounded-lg outline-none transition-all ${
-                  errors.email ? 'border-red-500 focus:ring-1 focus:ring-red-500' : 'focus:border-primary'
+                className={`form-input p-3 border rounded-lg outline-none transition-all ${
+                  errors.email ? 'border-red-500 focus:ring-2 focus:ring-red-200' : 'border-gray-200 focus:border-primary focus:ring-2 focus:ring-primary/10'
                 }`}
                 placeholder="staff@stylishenglish.com"
                 autoComplete="email"
                 disabled={isLoading}
               />
               {errors.email && (
-                <p className="form-error text-xs text-red-500 font-medium">
-                  {errors.email.type === 'email' ? t.errors?.invalidEmail || 'Invalid email' : t.errors?.required || 'Required'}
+                <p className="text-xs text-red-500 font-medium">
+                  {errors.email.type === 'email' ? (t.errors?.invalidEmail || 'Invalid email') : (t.errors?.required || 'Required')}
                 </p>
               )}
             </div>
@@ -124,8 +152,8 @@ export default function StaffLoginPage() {
                   type={showPassword ? 'text' : 'password'}
                   id="password"
                   {...register('password')}
-                  className={`form-input w-full p-2.5 border rounded-lg outline-none transition-all pr-12 ${
-                    errors.password ? 'border-red-500 focus:ring-1 focus:ring-red-500' : 'focus:border-primary'
+                  className={`form-input w-full p-3 border rounded-lg outline-none transition-all pr-12 ${
+                    errors.password ? 'border-red-500 focus:ring-2 focus:ring-red-200' : 'border-gray-200 focus:border-primary focus:ring-2 focus:ring-primary/10'
                   }`}
                   placeholder="••••••••"
                   autoComplete="current-password"
@@ -134,67 +162,59 @@ export default function StaffLoginPage() {
                 <button
                   type="button"
                   onClick={() => setShowPassword(prev => !prev)}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors"
-                  aria-label={showPassword ? t.staff.login.hidePassword : t.staff.login.showPassword}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors p-1"
+                  aria-label={showPassword ? (t.staff.login.hidePassword || 'Hide') : (t.staff.login.showPassword || 'Show')}
                   disabled={isLoading}
                 >
                   {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
                 </button>
               </div>
               {errors.password && (
-                <p className="form-error text-xs text-red-500 font-medium">
+                <p className="text-xs text-red-500 font-medium">
                   {errors.password.message === 'Too short'
-                    ? t.errors?.tooShort || 'Too short'
-                    : t.errors?.required || 'Required'}
+                    ? (t.errors?.tooShort || 'Too short')
+                    : (t.errors?.required || 'Required')}
                 </p>
               )}
             </div>
 
-            {/* Error Message */}
+            {/* Error */}
             <AnimatePresence mode="wait">
               {error && (
                 <motion.div
                   initial={{ opacity: 0, height: 0 }}
                   animate={{ opacity: 1, height: 'auto' }}
                   exit={{ opacity: 0, height: 0 }}
-                  className="flex items-center gap-2 p-4 bg-red-50 text-red-700 rounded-lg overflow-hidden"
+                  className="flex items-start gap-2 p-3 bg-red-50 text-red-700 rounded-lg overflow-hidden"
                 >
-                  <AlertCircle className="w-5 h-5 flex-shrink-0" />
-                  <p className="text-sm font-medium">{error}</p>
+                  <AlertCircle className="w-5 h-5 flex-shrink-0 mt-0.5" />
+                  <p className="text-sm font-medium leading-tight">{error}</p>
                 </motion.div>
               )}
             </AnimatePresence>
 
-            {/* Submit Button */}
+            {/* Submit */}
             <button
               type="submit"
               disabled={isLoading}
-              className="btn btn-primary w-full flex items-center justify-center gap-2 p-2.5 bg-primary text-white rounded-lg hover:bg-primary-dark transition-colors disabled:opacity-50 disabled:cursor-not-allowed font-medium"
+              className="btn btn-primary w-full flex items-center justify-center gap-2 p-3 bg-primary text-white rounded-xl hover:bg-primary-dark transition-all disabled:opacity-50 disabled:cursor-not-allowed font-semibold shadow-lg shadow-primary/20 hover:shadow-primary/30"
             >
               {isLoading ? (
                 <>
                   <Loader2 className="w-5 h-5 animate-spin" />
-                  <span>{t.staff.login.loggingIn}</span>
+                  <span>{t.staff.login.loggingIn || 'Signing in...'}</span>
                 </>
               ) : (
-                <span>{t.staff.login.loginButton}</span>
+                <span>{t.staff.login.loginButton || 'Login'}</span>
               )}
             </button>
           </form>
 
-          {/* Demo Credentials Note */}
-          <div className="mt-6 p-4 bg-blue-50 border border-blue-100 rounded-lg">
-            <p className="text-sm text-blue-700 text-center leading-relaxed">
-              <strong className="font-semibold">Demo Credentials:</strong><br />
-              Email: <span className="select-all font-mono">admin@stylishenglish.com</span><br />
-              Password: <span className="select-all font-mono">admin123</span>
-            </p>
-          </div>
+         
         </div>
 
-        {/* Copyright */}
-        <p className="text-center text-white/60 text-sm mt-6">
-          © 2026 {academyData.name}
+        <p className="text-center text-white/50 text-xs mt-6">
+          © 2026 {academyData.name} · Staff Portal
         </p>
       </motion.div>
     </div>

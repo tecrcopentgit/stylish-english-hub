@@ -1,22 +1,24 @@
+// app/api/auth/me/route.ts
 import { NextResponse } from 'next/server';
-import { getSession } from '@/lib/auth';
+import { getSession } from '@/lib/db/auth';
 
 export async function GET() {
   const session = await getSession();
 
   if (!session) {
     return NextResponse.json(
-      { error: 'Not authenticated' },
+      { success: false, error: 'Not authenticated' },
       { status: 401 }
     );
   }
 
+  // Return the user data to the frontend
   return NextResponse.json({
+    success: true,
     user: {
-      id: session.id,
+      id: session.userId,
       email: session.email,
-      name: session.name,
       role: session.role,
-    },
+    }
   });
 }

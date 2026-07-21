@@ -13,7 +13,6 @@ import {
   Receipt,
   MessageCircle,
   FileText,
-  Settings,
   LogOut,
   Menu,
   X,
@@ -37,9 +36,8 @@ const navItems: NavItem[] = [
   { href: '/staff/attendance', icon: ClipboardCheck, key: 'attendance' },
   { href: '/staff/fees', icon: CreditCard, key: 'feeStructure' },
   { href: '/staff/payments', icon: Receipt, key: 'payments' },
-  { href: '/staff/messages', icon: MessageCircle, key: 'whatsappMessages' },
-  { href: '/staff/reports', icon: FileText, key: 'reports' },
-  { href: '/staff/settings', icon: Settings, key: 'settings' },
+ 
+  
 ];
 
 export default function StaffLayout({ children }: { children: React.ReactNode }) {

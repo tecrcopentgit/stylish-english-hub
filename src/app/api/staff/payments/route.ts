@@ -1,12 +1,12 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { getSession } from '@/lib/auth';
+import { getSessionUser } from '@/lib/db/auth';
 import { db } from '@/db';
 import { payments, students } from '@/db/schema';
 import { desc, eq } from 'drizzle-orm';
 import { nanoid } from 'nanoid';
 
 export async function GET() {
-  const session = await getSession();
+  const session = await getSessionUser();
   
   if (!session) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
@@ -26,7 +26,7 @@ export async function GET() {
 }
 
 export async function POST(request: NextRequest) {
-  const session = await getSession();
+  const session = await getSessionUser();
   
   if (!session) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
