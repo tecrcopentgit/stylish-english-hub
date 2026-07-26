@@ -1,33 +1,19 @@
 "use server";
 
-import { drizzle } from "drizzle-orm/neon-http";
-import { neon } from "@neondatabase/serverless";
 import { sql } from "drizzle-orm";
 import { cookies } from "next/headers";
 import bcrypt from "bcryptjs";
+import { db, StaffRow } from "./db";
 
-const DATABASE_URL = process.env.DATABASE_URL || "";
-if (!DATABASE_URL) throw new Error("DATABASE_URL missing");
+// Re-export for backward compatibility
+export { StaffRow } from "./db";
 
-export const db = drizzle(neon(DATABASE_URL));
+// ─── COMPATIBILITY ALIASES ────────────────────────────
 
-export interface StaffRow {
-  id: string;
-  email: string;
-  role: string;
-  full_name?: string;
-  password_hash?: string;
-  created_at?: Date;
-}
-
-// ─── COMPATIBILITY ALIASES (fixes build errors) ────────────────────────────
-
-// Alias: getSession → getSessionUser
 export async function getSession() {
   return getSessionUser();
 }
 
-// Alias: createToken (simple cookie-based token string)
 export async function createToken(payload: {
   id: string;
   role: string;
@@ -36,7 +22,6 @@ export async function createToken(payload: {
   return `${payload.id}:${payload.role}`;
 }
 
-// Alias: setAuthCookie
 export async function setAuthCookie(token: string): Promise<void> {
   const isProd = process.env.NODE_ENV === "production";
   (await cookies()).set("auth_session", token, {
@@ -48,25 +33,22 @@ export async function setAuthCookie(token: string): Promise<void> {
   });
 }
 
-// Alias: clearAuthCookie
 export async function clearAuthCookie(): Promise<void> {
   (await cookies()).delete("auth_session");
 }
 
-// Alias: verifyPassword
 export async function verifyPassword(
   password: string,
   hash: string
 ): Promise<boolean> {
   if (!hash) return false;
-  // Support both bcrypt and plain-text (legacy) passwords
   if (hash.startsWith("$2") || hash.length > 30) {
     return bcrypt.compare(password, hash);
   }
   return password === hash;
 }
 
-// ─── SHARED ────────────────────────────────────────────────
+// ─── SESSION FUNCTIONS ───────────────────────────────
 
 export async function getSessionUser() {
   try {
@@ -93,7 +75,7 @@ export async function logoutUser() {
   return { success: true };
 }
 
-// ─── STAFF AUTH ────────────────────────────────────────────
+// ─── STAFF AUTH ──────────────────────────────────────
 
 export async function registerUser(credentials: {
   email: string;
@@ -156,7 +138,6 @@ export async function loginUser(credentials: {
     const result = await db.execute(sql`
       SELECT * FROM staff WHERE email = ${normalizedEmail} LIMIT 1
     `);
-    // ✅ Fixed: Added 'as unknown' before casting
     const staff = result.rows[0] as unknown as (StaffRow & { password_hash?: string }) | undefined;
     if (!staff) return { success: false, error: "Invalid credentials" };
 
@@ -187,7 +168,7 @@ export async function loginUser(credentials: {
   }
 }
 
-// ─── ADMIN AUTH ────────────────────────────────────────────
+// ─── ADMIN AUTH ──────────────────────────────────────
 
 export async function getSessionAdmin() {
   try {
@@ -203,7 +184,6 @@ export async function getSessionAdmin() {
       WHERE id = ${userId} AND role = 'admin' 
       LIMIT 1
     `);
-    // ✅ Fixed: Added 'as unknown' before casting
     return (result.rows[0] as unknown as StaffRow) || null;
   } catch {
     return null;
@@ -232,7 +212,6 @@ export async function registerAdmin(credentials: {
       SELECT id, role FROM staff WHERE email = ${normalizedEmail} LIMIT 1
     `);
     if (existing.rows.length > 0) {
-      // ✅ Fixed: Added 'as unknown' before casting
       const existingRole = (existing.rows[0] as unknown as StaffRow).role;
       if (existingRole === "admin") {
         return {
@@ -251,7 +230,6 @@ export async function registerAdmin(credentials: {
       VALUES (${normalizedEmail}, ${hash}, ${role}, ${fullName || null}, NOW())
       RETURNING id, email, role, full_name, created_at
     `);
-    // ✅ Fixed: Added 'as unknown' before casting
     const user = result.rows[0] as unknown as StaffRow;
 
     const isProd = process.env.NODE_ENV === "production";
@@ -291,7 +269,6 @@ export async function loginAdmin(credentials: {
       WHERE email = ${normalizedEmail} AND role = 'admin' 
       LIMIT 1
     `);
-    // ✅ Fixed: Added 'as unknown' before casting
     const admin = result.rows[0] as unknown as (StaffRow & { password_hash?: string }) | undefined;
     if (!admin) return { success: false, error: "Invalid admin credentials" };
 
