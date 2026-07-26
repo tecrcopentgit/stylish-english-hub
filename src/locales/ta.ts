@@ -381,6 +381,12 @@ export const ta = {
       invalidInvite: 'தவறான அழைப்புக் குறியீடு',
     },
   },
+    errors: {
+    required: 'அவசியம்',
+    invalidEmail: 'தவறான மின்னஞ்சல்',
+    tooShort: 'மிகக் குறைவு',
+    passwordMismatch: 'கடவுச்சொற்கள் பொருந்தவில்லை', // ✅ ADD THIS
+  },
 
   // Common
   common: {

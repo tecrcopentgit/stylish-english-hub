@@ -381,10 +381,11 @@ export const en = {
     },
   },
 
-  errors: {
+   errors: {
     required: 'This field is required',
     invalidEmail: 'Please enter a valid email',
     tooShort: 'Too short',
+    passwordMismatch: 'Passwords do not match', // ✅ ADD THIS
   },
 
   common: {
