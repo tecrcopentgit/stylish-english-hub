@@ -370,6 +370,7 @@ export const en = {
       email: 'Work Email',
       password: 'Password',
       confirmPassword: 'Confirm Password',
+      inviteCode: 'Invite Code', 
       registerButton: 'Create Account',  // Change from 'button' to 'registerButton'
       creating: 'Creating account...',   // Add this
       haveAccount: 'Already have an account?',  // Change from 'hasAccount' to 'haveAccount'

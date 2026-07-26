@@ -371,6 +371,7 @@ export const ta = {
       email: 'பணி மின்னஞ்சல்',
       password: 'கடவுச்சொல்',
       confirmPassword: 'கடவுச்சொல்லை உறுதிப்படுத்து',
+      inviteCode: 'அழைப்புக் குறியீடு',
       registerButton: 'கணக்கை உருவாக்கு',  // Change from 'button' to 'registerButton'
       creating: 'கணக்கை உருவாக்குகிறது...',   // Add this
       haveAccount: 'ஏற்கனவே கணக்கு உள்ளதா?',  // Change from 'hasAccount' to 'haveAccount'
