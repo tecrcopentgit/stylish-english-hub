@@ -364,16 +364,15 @@ export const en = {
       loggingIn: 'Signing in...',
       loginButton: 'Admin Login',
     },
-            register: {
+                 register: {
       heading: 'Staff Registration',
       fullName: 'Full Name',
       email: 'Work Email',
       password: 'Password',
       confirmPassword: 'Confirm Password',
-      inviteCode: 'Invite Code', 
-      registerButton: 'Create Account',  // Change from 'button' to 'registerButton'
+      registerButton: 'Create Account',  // Changed from 'button'
       creating: 'Creating account...',   // Add this
-      haveAccount: 'Already have an account?',  // Change from 'hasAccount' to 'haveAccount'
+      haveAccount: 'Already have an account?',  // Changed from 'hasAccount'
       loginLink: 'Sign in',              // Add this
       error: 'Registration failed. Please try again.',
       emailExists: 'Email already registered',
