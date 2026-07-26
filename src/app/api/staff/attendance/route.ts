@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { getSessionUser } from '@/lib/db/auth';
 import { db } from '@/db';
 import { attendance } from '@/db/schema';
+import { and, eq, SQL } from 'drizzle-orm'; // ✅ Added imports
 
 export async function POST(request: NextRequest) {
   const session = await getSessionUser();
@@ -23,7 +24,7 @@ export async function POST(request: NextRequest) {
         className,
         shift,
         status: record.status,
-        markedBy: markedBy || session.full_name || 'Staff', // ✅ Use full_name not name
+        markedBy: markedBy || session.full_name || 'Staff',
         remarks: record.remarks || null,
       });
     }
@@ -36,7 +37,7 @@ export async function POST(request: NextRequest) {
 }
 
 export async function GET(request: NextRequest) {
-  const session = await getSessionUser(); // ✅ Fixed: was getSession (doesn't exist)
+  const session = await getSessionUser();
   
   if (!session) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
@@ -48,20 +49,23 @@ export async function GET(request: NextRequest) {
   const shift = searchParams.get('shift');
 
   try {
-    let query = db.select().from(attendance);
+    // ✅ FIXED: Build conditions array instead of reassigning query
+    const conditions: SQL[] = [];
 
-    // Filter logic would go here with proper where clauses
     if (date) {
-      query = query.where(eq(attendance.date, date));
+      conditions.push(eq(attendance.date, date));
     }
     if (className) {
-      query = query.where(eq(attendance.className, className));
+      conditions.push(eq(attendance.className, className));
     }
     if (shift) {
-      query = query.where(eq(attendance.shift, shift));
+      conditions.push(eq(attendance.shift, shift));
     }
 
-    const records = await query;
+    const records = await db
+      .select()
+      .from(attendance)
+      .where(conditions.length > 0 ? and(...conditions) : undefined);
 
     return NextResponse.json({ attendance: records });
   } catch (error) {
