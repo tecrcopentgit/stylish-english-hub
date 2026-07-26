@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getSessionUser } from '@/lib/db/auth';
 import { db } from '@/db';
-import { attendance, attendanceMessages } from '@/db/schema';
+import { attendance } from '@/db/schema';
 
 export async function POST(request: NextRequest) {
   const session = await getSessionUser();
@@ -23,7 +23,7 @@ export async function POST(request: NextRequest) {
         className,
         shift,
         status: record.status,
-        markedBy: markedBy || session.name,
+        markedBy: markedBy || session.full_name || 'Staff', // ✅ Use full_name not name
         remarks: record.remarks || null,
       });
     }
@@ -36,7 +36,7 @@ export async function POST(request: NextRequest) {
 }
 
 export async function GET(request: NextRequest) {
-  const session = await getSession();
+  const session = await getSessionUser(); // ✅ Fixed: was getSession (doesn't exist)
   
   if (!session) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
@@ -51,6 +51,15 @@ export async function GET(request: NextRequest) {
     let query = db.select().from(attendance);
 
     // Filter logic would go here with proper where clauses
+    if (date) {
+      query = query.where(eq(attendance.date, date));
+    }
+    if (className) {
+      query = query.where(eq(attendance.className, className));
+    }
+    if (shift) {
+      query = query.where(eq(attendance.shift, shift));
+    }
 
     const records = await query;
 
