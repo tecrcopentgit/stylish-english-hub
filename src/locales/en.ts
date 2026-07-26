@@ -174,7 +174,6 @@ export const en = {
       error: 'An error occurred. Please try again.',
     },
 
-    // ============ REGISTER BLOCK ADDED ============
     register: {
       heading: 'Staff Registration',
       fullName: 'Full Name',
@@ -186,7 +185,6 @@ export const en = {
       error: 'Registration failed. Please try again.',
       emailExists: 'Email already registered',
     },
-    // ==============================================
 
     dashboard: {
       heading: 'Dashboard',
@@ -365,6 +363,20 @@ export const en = {
       password: 'Password',
       loggingIn: 'Signing in...',
       loginButton: 'Admin Login',
+    },
+    register: {
+      heading: 'Create Admin Account',
+      email: 'Email Address',
+      password: 'Password',
+      confirmPassword: 'Confirm Password',
+      inviteCode: 'Invite Code',
+      submitButton: 'Create Account',
+      creating: 'Creating account...',
+      haveAccount: 'Already have an account?',
+      loginLink: 'Sign in',
+      error: 'Registration failed',
+      emailExists: 'Email already registered',
+      invalidInvite: 'Invalid invite code',
     },
   },
 
