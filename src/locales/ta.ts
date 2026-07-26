@@ -365,18 +365,20 @@ export const ta = {
       loggingIn: 'உள்நுழைகிறது...',
       loginButton: 'நிர்வாக உள்நுழைவு',
     },
-              register: {
-      heading: 'ஊழியர் பதிவு',
+     register: {
+      heading: 'நிர்வாக கணக்கை உருவாக்கு',
       fullName: 'முழு பெயர்',
-      email: 'பணி மின்னஞ்சல்',
+      email: 'மின்னஞ்சல் முகவரி',
       password: 'கடவுச்சொல்',
       confirmPassword: 'கடவுச்சொல்லை உறுதிப்படுத்து',
-      registerButton: 'கணக்கை உருவாக்கு',  // Changed from 'button'
-      creating: 'கணக்கை உருவாக்குகிறது...',   // Add this
-      haveAccount: 'ஏற்கனவே கணக்கு உள்ளதா?',  // Changed from 'hasAccount'
-      loginLink: 'உள்நுழையவும்',              // Add this
-      error: 'பதிவு தோல்வியடைந்தது. மீண்டும் முயற்சிக்கவும்.',
+      inviteCode: 'அழைப்புக் குறியீடு',  // ✅ ADD THIS
+      registerButton: 'கணக்கை உருவாக்கு',
+      creating: 'கணக்கை உருவாக்குகிறது...',
+      haveAccount: 'ஏற்கனவே கணக்கு உள்ளதா?',
+      loginLink: 'உள்நுழையவும்',
+      error: 'பதிவு தோல்வியடைந்தது',
       emailExists: 'மின்னஞ்சல் ஏற்கனவே பதிவு செய்யப்பட்டுள்ளது',
+      invalidInvite: 'தவறான அழைப்புக் குறியீடு',
     },
   },
     errors: {
