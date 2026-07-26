@@ -364,7 +364,7 @@ export const en = {
       loggingIn: 'Signing in...',
       loginButton: 'Admin Login',
     },
-    register: {
+        register: {
       heading: 'Create Admin Account',
       fullName: 'Full Name',
       email: 'Email Address',
@@ -372,6 +372,7 @@ export const en = {
       confirmPassword: 'Confirm Password',
       inviteCode: 'Invite Code',
       submitButton: 'Create Account',
+      registerButton: 'Create Admin Account',  // ✅ ADD THIS (or replace submitButton)
       creating: 'Creating account...',
       haveAccount: 'Already have an account?',
       loginLink: 'Sign in',

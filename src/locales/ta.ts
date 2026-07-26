@@ -365,14 +365,15 @@ export const ta = {
       loggingIn: 'உள்நுழைகிறது...',
       loginButton: 'நிர்வாக உள்நுழைவு',
     },
-    register: {
+       register: {
       heading: 'நிர்வாக கணக்கை உருவாக்கு',
-      fullName: 'முழு பெயர்', 
+      fullName: 'முழு பெயர்',
       email: 'மின்னஞ்சல் முகவரி',
       password: 'கடவுச்சொல்',
       confirmPassword: 'கடவுச்சொல்லை உறுதிப்படுத்து',
       inviteCode: 'அழைப்புக் குறியீடு',
       submitButton: 'கணக்கை உருவாக்கு',
+      registerButton: 'நிர்வாக கணக்கை உருவாக்கு',  // ✅ ADD THIS (or replace submitButton)
       creating: 'கணக்கை உருவாக்குகிறது...',
       haveAccount: 'ஏற்கனவே கணக்கு உள்ளதா?',
       loginLink: 'உள்நுழையவும்',
