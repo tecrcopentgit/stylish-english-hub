@@ -71,7 +71,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         email: data.email,
         password: data.password,
         fullName: data.fullName,
-        role: "staff",
+        
       });
       if (result.success && result.user) {
         setUser({
