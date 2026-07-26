@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { pool } from '@/lib/db';
+import { pool } from '@/lib/auth.ts';
 import bcrypt from 'bcryptjs';
 
 // ⚠️ In real deployment load only from process.env.DATABASE_URL
