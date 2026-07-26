@@ -366,6 +366,7 @@ export const en = {
     },
     register: {
       heading: 'Create Admin Account',
+      fullName: 'Full Name',
       email: 'Email Address',
       password: 'Password',
       confirmPassword: 'Confirm Password',

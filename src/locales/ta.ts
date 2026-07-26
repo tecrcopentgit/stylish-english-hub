@@ -367,6 +367,7 @@ export const ta = {
     },
     register: {
       heading: 'நிர்வாக கணக்கை உருவாக்கு',
+      fullName: 'முழு பெயர்', 
       email: 'மின்னஞ்சல் முகவரி',
       password: 'கடவுச்சொல்',
       confirmPassword: 'கடவுச்சொல்லை உறுதிப்படுத்து',
