@@ -390,7 +390,7 @@ export const en = {
     passwordMismatch: 'Passwords do not match',
   },
 
-  common: {
+   common: {
     loading: 'Loading...',
     save: 'Save',
     cancel: 'Cancel',
@@ -417,6 +417,7 @@ export const en = {
     time: 'Time',
     total: 'Total',
     currency: '₹',
+    backToLogin: 'Back to Login',  // ✅ ADD THIS LINE
   },
 };
 

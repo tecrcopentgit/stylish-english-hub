@@ -394,7 +394,7 @@ export const ta = {
     passwordMismatch: 'கடவுச்சொற்கள் பொருந்தவில்லை',
   },
 
-  common: {
+   common: {
     loading: 'ஏற்றுகிறது...',
     save: 'சேமி',
     cancel: 'ரத்துசெய்',
@@ -421,6 +421,7 @@ export const ta = {
     time: 'நேரம்',
     total: 'மொத்தம்',
     currency: '₹',
+    backToLogin: 'உள்நுழைவுக்குத் திரும்பு',  // ✅ ADD THIS LINE
   },
 };
 
