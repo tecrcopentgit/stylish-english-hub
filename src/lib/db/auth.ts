@@ -5,8 +5,7 @@ import { cookies } from "next/headers";
 import bcrypt from "bcryptjs";
 import { db, StaffRow } from "./db";
 
-// Re-export for backward compatibility
-export { StaffRow } from "./db";
+// ❌ REMOVE THIS LINE: export { StaffRow } from "./db";
 
 // ─── COMPATIBILITY ALIASES ────────────────────────────
 
