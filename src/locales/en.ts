@@ -180,8 +180,10 @@ export const en = {
       email: 'Work Email',
       password: 'Password',
       confirmPassword: 'Confirm Password',
-      button: 'Create Account',
-      hasAccount: 'Already have an account?',
+      registerButton: 'Create Account',  // Changed from 'button'
+      creating: 'Creating account...',   // Added
+      haveAccount: 'Already have an account?',  // Changed from 'hasAccount'
+      loginLink: 'Sign in',              // Added
       error: 'Registration failed. Please try again.',
       emailExists: 'Email already registered',
     },
@@ -364,28 +366,28 @@ export const en = {
       loggingIn: 'Signing in...',
       loginButton: 'Admin Login',
     },
-      register: {
+    register: {
       heading: 'Create Admin Account',
       fullName: 'Full Name',
       email: 'Email Address',
       password: 'Password',
       confirmPassword: 'Confirm Password',
-      inviteCode: 'Invite Code',  // ✅ ADD THIS
-      registerButton: 'Create Account',
-      creating: 'Creating account...',
-      haveAccount: 'Already have an account?',
-      loginLink: 'Sign in',
+      inviteCode: 'Invite Code',  // Added
+      registerButton: 'Create Account',  // Changed from 'submitButton'
+      creating: 'Creating account...',   // Added
+      haveAccount: 'Already have an account?',  // Added
+      loginLink: 'Sign in',              // Added
       error: 'Registration failed',
       emailExists: 'Email already registered',
       invalidInvite: 'Invalid invite code',
     },
   },
 
-   errors: {
+  errors: {
     required: 'This field is required',
     invalidEmail: 'Please enter a valid email',
     tooShort: 'Too short',
-    passwordMismatch: 'Passwords do not match', // ✅ ADD THIS
+    passwordMismatch: 'Passwords do not match',
   },
 
   common: {

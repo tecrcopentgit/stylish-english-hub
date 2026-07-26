@@ -1,16 +1,12 @@
 // ============================================================
 // TAMIL TRANSLATIONS - தமிழ் மொழிபெயர்ப்பு
 // ============================================================
-// இந்த கோப்பை திருத்தி தமிழ் உள்ளடக்கத்தை புதுப்பிக்கவும்.
-// ============================================================
 
 export const ta = {
-  // Language
   lang: 'ta',
   langName: 'தமிழ்',
   langCode: 'தமிழ்',
 
-  // Navigation
   nav: {
     home: 'முகப்பு',
     about: 'எங்களைப் பற்றி',
@@ -24,7 +20,6 @@ export const ta = {
     staffLogin: 'ஊழியர் உள்நுழைவு',
   },
 
-  // Hero Section
   hero: {
     heading: 'இன்று கற்போம்,',
     headingLine2: 'நாளை வழிநடத்துவோம்!',
@@ -34,7 +29,6 @@ export const ta = {
     trustMessage: 'பாடப் பயிற்சி • ஆங்கிலப் பேச்சுத் திறன் • தொடர்புத் திறன் • மாணவர் மேம்பாடு',
   },
 
-  // About Section
   about: {
     heading: 'Stylish English Academy பற்றி',
     description: 'Stylish English Academy-யில் மாணவர்கள் பாடங்களில் முன்னேறுவதோடு, ஆங்கிலத்தில் தன்னம்பிக்கையுடன் பேசவும், தெளிவாகத் தொடர்புகொள்ளவும் தேவையான பயிற்சிகளை வழங்குகிறோம்.',
@@ -51,7 +45,6 @@ export const ta = {
     },
   },
 
-  // Why Choose Us
   whyChooseUs: {
     heading: 'ஏன் Stylish English Academy-யை தேர்வு செய்ய வேண்டும்?',
     features: [
@@ -68,13 +61,11 @@ export const ta = {
     ],
   },
 
-  // Programs Section
   programs: {
     heading: 'எங்கள் பயிற்சிகள்',
     viewDetails: 'மேலும் அறிய',
   },
 
-  // Learning Structure
   learningStructure: {
     heading: 'எங்கள் கற்றல் முறை',
     description: 'மாணவர்களின் பாட முன்னேற்றத்தையும் தொடர்புத் திறனையும் வளர்க்கும் வகையில் எங்கள் வகுப்புகள் திட்டமிடப்பட்டுள்ளன.',
@@ -99,7 +90,6 @@ export const ta = {
     },
   },
 
-  // Leadership Section
   leadership: {
     heading: 'எங்கள் நிர்வாகக் குழு',
     experience: 'அனுபவம்',
@@ -108,7 +98,6 @@ export const ta = {
     keyRoles: 'முக்கிய பொறுப்புகள்',
   },
 
-  // Teachers Section
   teachers: {
     heading: 'எங்கள் ஆசிரியர்களை அறிமுகம் செய்கிறோம்',
     experience: 'அனுபவம்',
@@ -116,7 +105,6 @@ export const ta = {
     specialisations: 'நிபுணத்துவம்',
   },
 
-  // Gallery Section
   gallery: {
     heading: 'செயல்பாடுகளுடன் கற்றல்',
     description: 'எங்கள் வகுப்பறைப் பயிற்சிகள், வாசிப்பு நிகழ்வுகள், தொடர்புத் திறன் செயல்பாடுகள், மாணவர் விளக்கவுரைகள், மேடைப் பேச்சு மற்றும் சிறப்பு நிகழ்வுகளைப் பாருங்கள்.',
@@ -124,7 +112,6 @@ export const ta = {
     close: 'மூடு',
   },
 
-  // Contact Section
   contact: {
     heading: 'உங்கள் கற்றல் பயணத்தை இன்றே தொடங்குங்கள்',
     description: 'பாடப் பயிற்சி, பேச்சு ஆங்கிலம், தொடர்புத் திறன் மற்றும் மாணவர் மேம்பாட்டுப் பயிற்சிகள் பற்றிய கூடுதல் விவரங்களுக்கு Stylish English Academy-யை தொடர்புகொள்ளுங்கள்.',
@@ -140,7 +127,6 @@ export const ta = {
     classTimings: 'வகுப்பு நேரம்',
   },
 
-  // Enquiry Form
   enquiry: {
     heading: 'மாணவர் சேர்க்கை விவரங்கள்',
     studentName: 'மாணவர் பெயர்',
@@ -166,7 +152,6 @@ export const ta = {
     selectGrade: 'வகுப்பைத் தேர்ந்தெடுக்கவும்',
   },
 
-  // Footer
   footer: {
     quickLinks: 'விரைவு இணைப்புகள்',
     ourPrograms: 'எங்கள் பயிற்சிகள்',
@@ -175,12 +160,10 @@ export const ta = {
     tagline: 'இன்று கற்போம், நாளை வழிநடத்துவோம்!',
   },
 
-  // WhatsApp Messages
   whatsapp: {
     defaultMessage: 'அஸ்ஸலாமு அலைக்கும் Stylish English Academy. உங்களோட பயிற்சிகள் (Courses) மற்றும் அட்மிஷன் விபரங்களை இன்ஷா அல்லாஹ் கொஞ்சம் விபரமா தெரிஞ்சுக்க ஆசைப்படுறேன்',
   },
 
-  // Staff Portal
   staff: {
     login: {
       heading: 'ஊழியர் உள்நுழைவு',
@@ -194,6 +177,21 @@ export const ta = {
       invalidCredentials: 'தவறான மின்னஞ்சல் அல்லது கடவுச்சொல்',
       error: 'பிழை ஏற்பட்டது. மீண்டும் முயற்சிக்கவும்.',
     },
+
+    register: {
+      heading: 'ஊழியர் பதிவு',
+      fullName: 'முழு பெயர்',
+      email: 'பணி மின்னஞ்சல்',
+      password: 'கடவுச்சொல்',
+      confirmPassword: 'கடவுச்சொல்லை உறுதிப்படுத்து',
+      registerButton: 'கணக்கை உருவாக்கு',  // Changed from 'button'
+      creating: 'கணக்கை உருவாக்குகிறது...',   // Added
+      haveAccount: 'ஏற்கனவே கணக்கு உள்ளதா?',  // Changed from 'hasAccount'
+      loginLink: 'உள்நுழையவும்',              // Added
+      error: 'பதிவு தோல்வியடைந்தது. மீண்டும் முயற்சிக்கவும்.',
+      emailExists: 'மின்னஞ்சல் ஏற்கனவே பதிவு செய்யப்பட்டுள்ளது',
+    },
+
     dashboard: {
       heading: 'முகப்பு பலகை',
       welcome: 'வரவேற்கிறோம்',
@@ -206,6 +204,7 @@ export const ta = {
       pendingFees: 'நிலுவை கட்டணம்',
       totalPending: 'மொத்த நிலுவைத் தொகை',
     },
+
     nav: {
       dashboard: 'முகப்பு பலகை',
       students: 'மாணவர் பட்டியல்',
@@ -217,6 +216,7 @@ export const ta = {
       settings: 'அமைப்புகள்',
       logout: 'வெளியேறு',
     },
+
     students: {
       heading: 'மாணவர் பட்டியல்',
       addStudent: 'மாணவரைச் சேர்',
@@ -247,6 +247,7 @@ export const ta = {
       saveSuccess: 'மாணவர் விவரங்கள் சேமிக்கப்பட்டன',
       deleteSuccess: 'மாணவர் செயலிழக்கப்பட்டார்',
     },
+
     attendance: {
       heading: 'வருகைப் பதிவு',
       selectDate: 'தேதியைத் தேர்ந்தெடுக்கவும்',
@@ -272,6 +273,7 @@ export const ta = {
       messageCopied: 'செய்தி நகலெடுக்கப்பட்டது',
       messageConfirmed: 'செய்தி நிலை புதுப்பிக்கப்பட்டது',
     },
+
     fees: {
       heading: 'கட்டண அமைப்பு',
       addClass: 'வகுப்பைச் சேர்',
@@ -287,6 +289,7 @@ export const ta = {
       actions: 'செயல்கள்',
       saveSuccess: 'கட்டண அமைப்பு சேமிக்கப்பட்டது',
     },
+
     payments: {
       heading: 'மாணவர் கட்டணங்கள்',
       recordPayment: 'கட்டணம் பதிவு செய்',
@@ -316,6 +319,7 @@ export const ta = {
       paymentSaved: 'கட்டணம் சேமிக்கப்பட்டது',
       viewHistory: 'வரலாற்றைப் பார்',
     },
+
     reports: {
       heading: 'அறிக்கைகள்',
       attendanceReports: 'வருகை அறிக்கைகள்',
@@ -345,6 +349,7 @@ export const ta = {
       exportPDF: 'PDF ஏற்றுமதி',
       print: 'அச்சிடு',
     },
+
     settings: {
       heading: 'அமைப்புகள்',
       profile: 'சுயவிவரம்',
@@ -365,30 +370,30 @@ export const ta = {
       loggingIn: 'உள்நுழைகிறது...',
       loginButton: 'நிர்வாக உள்நுழைவு',
     },
-     register: {
+    register: {
       heading: 'நிர்வாக கணக்கை உருவாக்கு',
       fullName: 'முழு பெயர்',
       email: 'மின்னஞ்சல் முகவரி',
       password: 'கடவுச்சொல்',
       confirmPassword: 'கடவுச்சொல்லை உறுதிப்படுத்து',
-      inviteCode: 'அழைப்புக் குறியீடு',  // ✅ ADD THIS
-      registerButton: 'கணக்கை உருவாக்கு',
-      creating: 'கணக்கை உருவாக்குகிறது...',
-      haveAccount: 'ஏற்கனவே கணக்கு உள்ளதா?',
-      loginLink: 'உள்நுழையவும்',
+      inviteCode: 'அழைப்புக் குறியீடு',  // Added
+      registerButton: 'கணக்கை உருவாக்கு',  // Changed from 'submitButton'
+      creating: 'கணக்கை உருவாக்குகிறது...',   // Added
+      haveAccount: 'ஏற்கனவே கணக்கு உள்ளதா?',  // Added
+      loginLink: 'உள்நுழையவும்',              // Added
       error: 'பதிவு தோல்வியடைந்தது',
       emailExists: 'மின்னஞ்சல் ஏற்கனவே பதிவு செய்யப்பட்டுள்ளது',
       invalidInvite: 'தவறான அழைப்புக் குறியீடு',
     },
   },
-    errors: {
+
+  errors: {
     required: 'அவசியம்',
     invalidEmail: 'தவறான மின்னஞ்சல்',
     tooShort: 'மிகக் குறைவு',
-    passwordMismatch: 'கடவுச்சொற்கள் பொருந்தவில்லை', // ✅ ADD THIS
+    passwordMismatch: 'கடவுச்சொற்கள் பொருந்தவில்லை',
   },
 
-  // Common
   common: {
     loading: 'ஏற்றுகிறது...',
     save: 'சேமி',
