@@ -74,13 +74,14 @@ const overlayVariants = {
   exit: { opacity: 0 },
 };
 
+// ✅ FIXED: Added 'as const' to type property and to the whole object
 const modalVariants = {
   hidden: { opacity: 0, scale: 0.94, y: 16 },
   visible: {
     opacity: 1,
     scale: 1,
     y: 0,
-    transition: { type: 'spring', stiffness: 300, damping: 28 },
+    transition: { type: 'spring' as const, stiffness: 300, damping: 28 },
   },
   exit: {
     opacity: 0,
@@ -88,7 +89,7 @@ const modalVariants = {
     y: 16,
     transition: { duration: 0.18 },
   },
-};
+} as const;
 
 const rowVariants = {
   hidden: { opacity: 0, y: 8 },
