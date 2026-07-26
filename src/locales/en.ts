@@ -358,6 +358,16 @@ export const en = {
     },
   },
 
+  admin: {
+    login: {
+      heading: 'Administration Portal',
+      email: 'Email Address',
+      password: 'Password',
+      loggingIn: 'Signing in...',
+      loginButton: 'Admin Login',
+    },
+  },
+
   errors: {
     required: 'This field is required',
     invalidEmail: 'Please enter a valid email',

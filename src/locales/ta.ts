@@ -357,6 +357,16 @@ export const ta = {
     },
   },
 
+  admin: {
+    login: {
+      heading: 'நிர்வாக போர்டல்',
+      email: 'மின்னஞ்சல் முகவரி',
+      password: 'கடவுச்சொல்',
+      loggingIn: 'உள்நுழைகிறது...',
+      loginButton: 'நிர்வாக உள்நுழைவு',
+    },
+  },
+
   // Common
   common: {
     loading: 'ஏற்றுகிறது...',
