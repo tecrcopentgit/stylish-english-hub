@@ -82,7 +82,7 @@ export async function getSessionUser() {
       WHERE id = ${userId} AND role = ${role} 
       LIMIT 1
     `);
-    return (result.rows[0] as StaffRow) || null;
+    return (result.rows[0] as unknown as StaffRow) || null;
   } catch {
     return null;
   }
@@ -119,7 +119,7 @@ export async function registerUser(credentials: {
       VALUES (${normalizedEmail}, ${hash}, ${role}, ${fullName || null}, NOW())
       RETURNING id, email, role, full_name, created_at
     `);
-    const user = result.rows[0] as StaffRow;
+    const user = (result.rows[0] as unknown as StaffRow) || null;
 
     const isProd = process.env.NODE_ENV === "production";
     (await cookies()).set("auth_session", `${user.id}:${user.role}`, {
@@ -156,9 +156,8 @@ export async function loginUser(credentials: {
     const result = await db.execute(sql`
       SELECT * FROM staff WHERE email = ${normalizedEmail} LIMIT 1
     `);
-    const staff = result.rows[0] as
-      | (StaffRow & { password_hash?: string })
-      | undefined;
+    // ✅ Fixed: Added 'as unknown' before casting
+    const staff = result.rows[0] as unknown as (StaffRow & { password_hash?: string }) | undefined;
     if (!staff) return { success: false, error: "Invalid credentials" };
 
     const match = await verifyPassword(password, staff.password_hash || "");
@@ -204,7 +203,8 @@ export async function getSessionAdmin() {
       WHERE id = ${userId} AND role = 'admin' 
       LIMIT 1
     `);
-    return (result.rows[0] as StaffRow) || null;
+    // ✅ Fixed: Added 'as unknown' before casting
+    return (result.rows[0] as unknown as StaffRow) || null;
   } catch {
     return null;
   }
@@ -232,7 +232,8 @@ export async function registerAdmin(credentials: {
       SELECT id, role FROM staff WHERE email = ${normalizedEmail} LIMIT 1
     `);
     if (existing.rows.length > 0) {
-      const existingRole = (existing.rows[0] as StaffRow).role;
+      // ✅ Fixed: Added 'as unknown' before casting
+      const existingRole = (existing.rows[0] as unknown as StaffRow).role;
       if (existingRole === "admin") {
         return {
           success: false,
@@ -250,7 +251,8 @@ export async function registerAdmin(credentials: {
       VALUES (${normalizedEmail}, ${hash}, ${role}, ${fullName || null}, NOW())
       RETURNING id, email, role, full_name, created_at
     `);
-    const user = result.rows[0] as StaffRow;
+    // ✅ Fixed: Added 'as unknown' before casting
+    const user = result.rows[0] as unknown as StaffRow;
 
     const isProd = process.env.NODE_ENV === "production";
     (await cookies()).set("auth_session", `${user.id}:${user.role}`, {
@@ -289,9 +291,8 @@ export async function loginAdmin(credentials: {
       WHERE email = ${normalizedEmail} AND role = 'admin' 
       LIMIT 1
     `);
-    const admin = result.rows[0] as
-      | (StaffRow & { password_hash?: string })
-      | undefined;
+    // ✅ Fixed: Added 'as unknown' before casting
+    const admin = result.rows[0] as unknown as (StaffRow & { password_hash?: string }) | undefined;
     if (!admin) return { success: false, error: "Invalid admin credentials" };
 
     const match = await verifyPassword(password, admin.password_hash || "");
