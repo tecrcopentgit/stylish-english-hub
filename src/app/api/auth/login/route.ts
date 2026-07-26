@@ -31,16 +31,16 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Check active status (optional - remove if your schema doesn't have isActive)
-    if ('isActive' in staffMember && !staffMember.isActive) {
+    // Check active status
+    if (!staffMember.isActive) {
       return NextResponse.json(
         { error: 'Account is inactive' },
         { status: 401 }
       );
     }
 
-    // Verify password using camelCase field name (matches Drizzle schema)
-    const isValid = await verifyPassword(password, staffMember.passwordHash); // ✅ Fixed: passwordHash not password_hash
+    // Verify password
+    const isValid = await verifyPassword(password, staffMember.passwordHash);
     if (!isValid) {
       return NextResponse.json(
         { error: 'Invalid email or password' },
@@ -48,23 +48,21 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Create token
-    const token = await createToken({
-      id: staffMember.id,
+        const token = await createToken({
+      id: String(staffMember.id),
       email: staffMember.email,
-      name: staffMember.fullName || staffMember.full_name || 'Staff', // Try both camelCase and snake_case
       role: staffMember.role,
     });
 
     // Set cookie
     await setAuthCookie(token);
 
-    return NextResponse.json({
+        return NextResponse.json({
       success: true,
       user: {
         id: staffMember.id,
         email: staffMember.email,
-        name: staffMember.fullName || staffMember.full_name || 'Staff', // Try both camelCase and snake_case
+        name: staffMember.name,
         role: staffMember.role,
       },
     });
