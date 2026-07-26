@@ -20,6 +20,52 @@ export interface StaffRow {
   created_at?: Date;
 }
 
+// ─── COMPATIBILITY ALIASES (fixes build errors) ────────────────────────────
+
+// Alias: getSession → getSessionUser
+export async function getSession() {
+  return getSessionUser();
+}
+
+// Alias: createToken (simple cookie-based token string)
+export async function createToken(payload: {
+  id: string;
+  role: string;
+  email?: string;
+}): Promise<string> {
+  return `${payload.id}:${payload.role}`;
+}
+
+// Alias: setAuthCookie
+export async function setAuthCookie(token: string): Promise<void> {
+  const isProd = process.env.NODE_ENV === "production";
+  (await cookies()).set("auth_session", token, {
+    httpOnly: true,
+    secure: isProd,
+    sameSite: "lax",
+    path: "/",
+    maxAge: 60 * 60 * 24 * 7,
+  });
+}
+
+// Alias: clearAuthCookie
+export async function clearAuthCookie(): Promise<void> {
+  (await cookies()).delete("auth_session");
+}
+
+// Alias: verifyPassword
+export async function verifyPassword(
+  password: string,
+  hash: string
+): Promise<boolean> {
+  if (!hash) return false;
+  // Support both bcrypt and plain-text (legacy) passwords
+  if (hash.startsWith("$2") || hash.length > 30) {
+    return bcrypt.compare(password, hash);
+  }
+  return password === hash;
+}
+
 // ─── SHARED ────────────────────────────────────────────────
 
 export async function getSessionUser() {
@@ -31,7 +77,10 @@ export async function getSessionUser() {
     if (!userId || !role) return null;
 
     const result = await db.execute(sql`
-      SELECT id, email, role, full_name FROM staff WHERE id = ${userId} AND role = ${role} LIMIT 1
+      SELECT id, email, role, full_name 
+      FROM staff 
+      WHERE id = ${userId} AND role = ${role} 
+      LIMIT 1
     `);
     return (result.rows[0] as StaffRow) || null;
   } catch {
@@ -45,11 +94,9 @@ export async function logoutUser() {
 }
 
 // ─── STAFF AUTH ────────────────────────────────────────────
-// Add this line at the very end of src/lib/db/auth.ts
-export { logoutUser as clearAuthCookie };
 
 export async function registerUser(credentials: {
-  email: string
+  email: string;
   password: string;
   fullName?: string;
 }) {
@@ -98,7 +145,10 @@ export async function registerUser(credentials: {
   }
 }
 
-export async function loginUser(credentials: { email: string; password: string }) {
+export async function loginUser(credentials: {
+  email: string;
+  password: string;
+}) {
   try {
     const { email, password } = credentials;
     const normalizedEmail = email.toLowerCase().trim();
@@ -106,18 +156,12 @@ export async function loginUser(credentials: { email: string; password: string }
     const result = await db.execute(sql`
       SELECT * FROM staff WHERE email = ${normalizedEmail} LIMIT 1
     `);
-    const staff = result.rows[0] as (StaffRow & { password_hash?: string }) | undefined;
+    const staff = result.rows[0] as
+      | (StaffRow & { password_hash?: string })
+      | undefined;
     if (!staff) return { success: false, error: "Invalid credentials" };
 
-    let match = false;
-    if (staff.password_hash) {
-      if (staff.password_hash.startsWith("$2") || staff.password_hash.length > 30) {
-        match = await bcrypt.compare(password, staff.password_hash);
-      } else {
-        match = password === staff.password_hash;
-      }
-    }
-
+    const match = await verifyPassword(password, staff.password_hash || "");
     if (!match) return { success: false, error: "Invalid credentials" };
 
     const isProd = process.env.NODE_ENV === "production";
@@ -155,7 +199,10 @@ export async function getSessionAdmin() {
     if (!userId || role !== "admin") return null;
 
     const result = await db.execute(sql`
-      SELECT id, email, role, full_name FROM staff WHERE id = ${userId} AND role = 'admin' LIMIT 1
+      SELECT id, email, role, full_name 
+      FROM staff 
+      WHERE id = ${userId} AND role = 'admin' 
+      LIMIT 1
     `);
     return (result.rows[0] as StaffRow) || null;
   } catch {
@@ -170,7 +217,6 @@ export async function registerAdmin(credentials: {
   inviteCode: string;
 }) {
   try {
-    // ── Gate: invite code must match env secret ──
     const ADMIN_INVITE_CODE = process.env.ADMIN_INVITE_CODE || "";
     if (!ADMIN_INVITE_CODE) {
       return { success: false, error: "Admin registration is not configured" };
@@ -182,20 +228,22 @@ export async function registerAdmin(credentials: {
     const { email, password, fullName } = credentials;
     const normalizedEmail = email.toLowerCase().trim();
 
-    // Check if email already exists (any role)
     const existing = await db.execute(sql`
       SELECT id, role FROM staff WHERE email = ${normalizedEmail} LIMIT 1
     `);
     if (existing.rows.length > 0) {
       const existingRole = (existing.rows[0] as StaffRow).role;
       if (existingRole === "admin") {
-        return { success: false, error: "Admin account already exists for this email" };
+        return {
+          success: false,
+          error: "Admin account already exists for this email",
+        };
       }
       return { success: false, error: "Email already registered as staff" };
     }
 
-    const hash = await bcrypt.hash(password, 12); // 🔒 Higher rounds for admin
-    const role = "admin"; // 🔒 Hardcoded — no privilege escalation
+    const hash = await bcrypt.hash(password, 12);
+    const role = "admin";
 
     const result = await db.execute(sql`
       INSERT INTO staff (email, password_hash, role, full_name, created_at)
@@ -210,7 +258,7 @@ export async function registerAdmin(credentials: {
       secure: isProd,
       sameSite: "lax",
       path: "/",
-      maxAge: 60 * 60 * 24 * 7, // 7 days
+      maxAge: 60 * 60 * 24 * 7,
     });
 
     return {
@@ -228,26 +276,25 @@ export async function registerAdmin(credentials: {
   }
 }
 
-export async function loginAdmin(credentials: { email: string; password: string }) {
+export async function loginAdmin(credentials: {
+  email: string;
+  password: string;
+}) {
   try {
     const { email, password } = credentials;
     const normalizedEmail = email.toLowerCase().trim();
 
     const result = await db.execute(sql`
-      SELECT * FROM staff WHERE email = ${normalizedEmail} AND role = 'admin' LIMIT 1
+      SELECT * FROM staff 
+      WHERE email = ${normalizedEmail} AND role = 'admin' 
+      LIMIT 1
     `);
-    const admin = result.rows[0] as (StaffRow & { password_hash?: string }) | undefined;
+    const admin = result.rows[0] as
+      | (StaffRow & { password_hash?: string })
+      | undefined;
     if (!admin) return { success: false, error: "Invalid admin credentials" };
 
-    let match = false;
-    if (admin.password_hash) {
-      if (admin.password_hash.startsWith("$2") || admin.password_hash.length > 30) {
-        match = await bcrypt.compare(password, admin.password_hash);
-      } else {
-        match = password === admin.password_hash;
-      }
-    }
-
+    const match = await verifyPassword(password, admin.password_hash || "");
     if (!match) return { success: false, error: "Invalid admin credentials" };
 
     const isProd = process.env.NODE_ENV === "production";
