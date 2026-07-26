@@ -1,7 +1,8 @@
+// src/app/api/auth/logout/route.ts
 import { NextResponse } from 'next/server';
-import { clearAuthCookie } from '@/lib/db/auth';
+import { logoutUser } from "@/lib/db/auth"; 
 
 export async function POST() {
-  await clearAuthCookie();
+  await logoutUser();
   return NextResponse.json({ success: true });
 }

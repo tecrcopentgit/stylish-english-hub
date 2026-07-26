@@ -9,7 +9,7 @@ import bcrypt from "bcryptjs";
 const DATABASE_URL = process.env.DATABASE_URL || "";
 if (!DATABASE_URL) throw new Error("DATABASE_URL missing");
 
-const db = drizzle(neon(DATABASE_URL));
+export const db = drizzle(neon(DATABASE_URL));
 
 export interface StaffRow {
   id: string;
@@ -45,9 +45,11 @@ export async function logoutUser() {
 }
 
 // ─── STAFF AUTH ────────────────────────────────────────────
+// Add this line at the very end of src/lib/db/auth.ts
+export { logoutUser as clearAuthCookie };
 
 export async function registerUser(credentials: {
-  email: string;
+  email: string
   password: string;
   fullName?: string;
 }) {
