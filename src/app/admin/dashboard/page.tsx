@@ -51,14 +51,15 @@ const containerVariants = {
   },
 };
 
+// ✅ FIXED: Added 'as const' to ease property
 const itemVariants = {
   hidden: { opacity: 0, y: 24 },
   visible: {
     opacity: 1,
     y: 0,
-    transition: { duration: 0.4, ease: 'easeOut' },
+    transition: { duration: 0.4, ease: 'easeOut' as const },
   },
-};
+} as const;
 
 function SkeletonCard() {
   return (
