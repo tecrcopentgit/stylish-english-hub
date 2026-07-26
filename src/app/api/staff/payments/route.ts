@@ -64,7 +64,7 @@ export async function POST(request: NextRequest) {
       pendingBalance: body.pendingBalance || '0',
       paymentStatus: body.paymentStatus,
       paymentMethod: body.paymentMethod,
-      receivedBy: body.receivedBy || session.name,
+      receivedBy: body.receivedBy || session.full_name,
       remarks: body.remarks || null,
     }).returning();
 
