@@ -39,8 +39,9 @@ export default function DashboardPage() {
     pendingFees: 0,
     totalPending: 0,
   });
-  const [isLoading, setIsLoading] = useState(true);
 
+  const [isLoading, setIsLoading] = useState(true);
+console.log(t.staff);
   useEffect(() => {
     fetchDashboardStats();
   }, []);
@@ -95,29 +96,9 @@ export default function DashboardPage() {
       color: 'bg-gray-500',
       bgColor: 'bg-gray-50',
     },
-    {
-      label: t.staff.dashboard.feesCollected,
-      value: `₹${stats.feesCollected.toLocaleString('en-IN')}`,
-      icon: DollarSign,
-      color: 'bg-emerald-500',
-      bgColor: 'bg-emerald-50',
-    },
-    {
-      label: t.staff.dashboard.pendingFees,
-      value: stats.pendingFees,
-      icon: AlertCircle,
-      color: 'bg-orange-500',
-      bgColor: 'bg-orange-50',
-    },
-    {
-      label: t.staff.dashboard.totalPending,
-      value: `₹${stats.totalPending.toLocaleString('en-IN')}`,
-      icon: TrendingUp,
-      color: 'bg-purple-500',
-      bgColor: 'bg-purple-50',
-    },
+    
   ];
-
+ console.log('statcards' , statCards);
   return (
     <div>
       {/* Header */}
@@ -188,18 +169,7 @@ export default function DashboardPage() {
             </div>
             <p className="font-medium text-text-primary text-sm">{t.staff.nav.students}</p>
           </motion.a>
-          <motion.a
-            href="/staff/payments"
-            initial={{ opacity: 0, scale: 0.95 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.3, delay: 0.4 }}
-            className="card p-4 text-center hover:border-primary border-2 border-transparent transition-colors"
-          >
-            <div className="w-12 h-12 bg-primary/10 rounded-xl flex items-center justify-center mx-auto mb-3">
-              <DollarSign className="w-6 h-6 text-primary" />
-            </div>
-            <p className="font-medium text-text-primary text-sm">{t.staff.nav.payments}</p>
-          </motion.a>
+          
           <motion.a
             href="/staff/reports"
             initial={{ opacity: 0, scale: 0.95 }}

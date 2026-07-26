@@ -226,11 +226,12 @@ export const academyData = {
       },
     },
     {
-      id: 'mathematics-teacher',
-    
-      name: {
-        en: 'Mathematics Teacher',
-        ta: 'கணித ஆசிரியர்',
+      id: 'ramalan-athika',
+      name: ' Ms.Ramalan Athika',
+      qualification: '' ,
+      experience: {
+        en: '1/2 Year',
+        ta: '1 /2 ஆண்டு கற்பித்தல் அனுபவம்',
       },
       image: thasnim_photo,
       specialisations: {

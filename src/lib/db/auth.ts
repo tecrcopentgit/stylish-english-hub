@@ -15,9 +15,12 @@ export interface StaffRow {
   id: string;
   email: string;
   role: string;
+  full_name?: string;
   password_hash?: string;
   created_at?: Date;
 }
+
+// ─── SHARED ────────────────────────────────────────────────
 
 export async function getSessionUser() {
   try {
@@ -26,8 +29,9 @@ export async function getSessionUser() {
     if (!token) return null;
     const [userId, role] = token.split(":");
     if (!userId || !role) return null;
+
     const result = await db.execute(sql`
-      SELECT id, email, role FROM staff WHERE id = ${userId} AND role = ${role} LIMIT 1
+      SELECT id, email, role, full_name FROM staff WHERE id = ${userId} AND role = ${role} LIMIT 1
     `);
     return (result.rows[0] as StaffRow) || null;
   } catch {
@@ -35,39 +39,59 @@ export async function getSessionUser() {
   }
 }
 
+export async function logoutUser() {
+  (await cookies()).delete("auth_session");
+  return { success: true };
+}
+
+// ─── STAFF AUTH ────────────────────────────────────────────
+
 export async function registerUser(credentials: {
   email: string;
   password: string;
   fullName?: string;
-  role?: string;
 }) {
   try {
-    const { email, password, role = "staff" } = credentials;
+    const { email, password, fullName } = credentials;
+    const normalizedEmail = email.toLowerCase().trim();
+
     const existing = await db.execute(sql`
-      SELECT id FROM staff WHERE email = ${email.toLowerCase().trim()} LIMIT 1
+      SELECT id FROM staff WHERE email = ${normalizedEmail} LIMIT 1
     `);
     if (existing.rows.length > 0) {
       return { success: false, error: "Email already registered" };
     }
+
     const hash = await bcrypt.hash(password, 10);
+    const role = "staff";
+
     const result = await db.execute(sql`
-      INSERT INTO staff (email, password_hash, role, created_at)
-      VALUES (${email.toLowerCase().trim()}, ${hash}, ${role}, NOW())
-      RETURNING id, email, role, created_at
+      INSERT INTO staff (email, password_hash, role, full_name, created_at)
+      VALUES (${normalizedEmail}, ${hash}, ${role}, ${fullName || null}, NOW())
+      RETURNING id, email, role, full_name, created_at
     `);
     const user = result.rows[0] as StaffRow;
 
+    const isProd = process.env.NODE_ENV === "production";
     (await cookies()).set("auth_session", `${user.id}:${user.role}`, {
       httpOnly: true,
-      secure: false, // <-- CHANGED: false for localhost HTTP
-      sameSite: "strict",
+      secure: isProd,
+      sameSite: "lax",
       path: "/",
       maxAge: 60 * 60 * 24 * 7,
     });
 
-    return { success: true, user: { ...user, name: "Staff" } };
+    return {
+      success: true,
+      user: {
+        id: user.id,
+        email: user.email,
+        name: user.full_name || "Staff",
+        role: user.role,
+      },
+    };
   } catch (err: any) {
-    console.error("REGISTER ERROR:", err);
+    console.error("STAFF REGISTER ERROR:", err);
     return { success: false, error: err?.message || "Registration failed" };
   }
 }
@@ -75,8 +99,10 @@ export async function registerUser(credentials: {
 export async function loginUser(credentials: { email: string; password: string }) {
   try {
     const { email, password } = credentials;
+    const normalizedEmail = email.toLowerCase().trim();
+
     const result = await db.execute(sql`
-      SELECT * FROM staff WHERE email = ${email.toLowerCase().trim()} LIMIT 1
+      SELECT * FROM staff WHERE email = ${normalizedEmail} LIMIT 1
     `);
     const staff = result.rows[0] as (StaffRow & { password_hash?: string }) | undefined;
     if (!staff) return { success: false, error: "Invalid credentials" };
@@ -92,10 +118,11 @@ export async function loginUser(credentials: { email: string; password: string }
 
     if (!match) return { success: false, error: "Invalid credentials" };
 
+    const isProd = process.env.NODE_ENV === "production";
     (await cookies()).set("auth_session", `${staff.id}:${staff.role}`, {
       httpOnly: true,
-      secure: false, // <-- CHANGED: false for localhost HTTP
-      sameSite: "strict",
+      secure: isProd,
+      sameSite: "lax",
       path: "/",
       maxAge: 60 * 60 * 24 * 7,
     });
@@ -105,17 +132,147 @@ export async function loginUser(credentials: { email: string; password: string }
       user: {
         id: staff.id,
         email: staff.email,
-        name: "Staff",
+        name: staff.full_name || "Staff",
         role: staff.role,
       },
     };
   } catch (err: any) {
-    console.error("LOGIN ERROR:", err);
+    console.error("STAFF LOGIN ERROR:", err);
     return { success: false, error: err?.message || "Login failed" };
   }
 }
 
-export async function logoutUser() {
+// ─── ADMIN AUTH ────────────────────────────────────────────
+
+export async function getSessionAdmin() {
+  try {
+    const cookieStore = await cookies();
+    const token = cookieStore.get("auth_session")?.value;
+    if (!token) return null;
+    const [userId, role] = token.split(":");
+    if (!userId || role !== "admin") return null;
+
+    const result = await db.execute(sql`
+      SELECT id, email, role, full_name FROM staff WHERE id = ${userId} AND role = 'admin' LIMIT 1
+    `);
+    return (result.rows[0] as StaffRow) || null;
+  } catch {
+    return null;
+  }
+}
+
+export async function registerAdmin(credentials: {
+  email: string;
+  password: string;
+  fullName?: string;
+  inviteCode: string;
+}) {
+  try {
+    // ── Gate: invite code must match env secret ──
+    const ADMIN_INVITE_CODE = process.env.ADMIN_INVITE_CODE || "";
+    if (!ADMIN_INVITE_CODE) {
+      return { success: false, error: "Admin registration is not configured" };
+    }
+    if (credentials.inviteCode.trim() !== ADMIN_INVITE_CODE) {
+      return { success: false, error: "Invalid invite code" };
+    }
+
+    const { email, password, fullName } = credentials;
+    const normalizedEmail = email.toLowerCase().trim();
+
+    // Check if email already exists (any role)
+    const existing = await db.execute(sql`
+      SELECT id, role FROM staff WHERE email = ${normalizedEmail} LIMIT 1
+    `);
+    if (existing.rows.length > 0) {
+      const existingRole = (existing.rows[0] as StaffRow).role;
+      if (existingRole === "admin") {
+        return { success: false, error: "Admin account already exists for this email" };
+      }
+      return { success: false, error: "Email already registered as staff" };
+    }
+
+    const hash = await bcrypt.hash(password, 12); // 🔒 Higher rounds for admin
+    const role = "admin"; // 🔒 Hardcoded — no privilege escalation
+
+    const result = await db.execute(sql`
+      INSERT INTO staff (email, password_hash, role, full_name, created_at)
+      VALUES (${normalizedEmail}, ${hash}, ${role}, ${fullName || null}, NOW())
+      RETURNING id, email, role, full_name, created_at
+    `);
+    const user = result.rows[0] as StaffRow;
+
+    const isProd = process.env.NODE_ENV === "production";
+    (await cookies()).set("auth_session", `${user.id}:${user.role}`, {
+      httpOnly: true,
+      secure: isProd,
+      sameSite: "lax",
+      path: "/",
+      maxAge: 60 * 60 * 24 * 7, // 7 days
+    });
+
+    return {
+      success: true,
+      user: {
+        id: user.id,
+        email: user.email,
+        name: user.full_name || "Admin",
+        role: user.role,
+      },
+    };
+  } catch (err: any) {
+    console.error("ADMIN REGISTER ERROR:", err);
+    return { success: false, error: err?.message || "Registration failed" };
+  }
+}
+
+export async function loginAdmin(credentials: { email: string; password: string }) {
+  try {
+    const { email, password } = credentials;
+    const normalizedEmail = email.toLowerCase().trim();
+
+    const result = await db.execute(sql`
+      SELECT * FROM staff WHERE email = ${normalizedEmail} AND role = 'admin' LIMIT 1
+    `);
+    const admin = result.rows[0] as (StaffRow & { password_hash?: string }) | undefined;
+    if (!admin) return { success: false, error: "Invalid admin credentials" };
+
+    let match = false;
+    if (admin.password_hash) {
+      if (admin.password_hash.startsWith("$2") || admin.password_hash.length > 30) {
+        match = await bcrypt.compare(password, admin.password_hash);
+      } else {
+        match = password === admin.password_hash;
+      }
+    }
+
+    if (!match) return { success: false, error: "Invalid admin credentials" };
+
+    const isProd = process.env.NODE_ENV === "production";
+    (await cookies()).set("auth_session", `${admin.id}:${admin.role}`, {
+      httpOnly: true,
+      secure: isProd,
+      sameSite: "lax",
+      path: "/",
+      maxAge: 60 * 60 * 24 * 7,
+    });
+
+    return {
+      success: true,
+      user: {
+        id: admin.id,
+        email: admin.email,
+        name: admin.full_name || "Admin",
+        role: admin.role,
+      },
+    };
+  } catch (err: any) {
+    console.error("ADMIN LOGIN ERROR:", err);
+    return { success: false, error: err?.message || "Login failed" };
+  }
+}
+
+export async function logoutAdmin() {
   (await cookies()).delete("auth_session");
   return { success: true };
 }

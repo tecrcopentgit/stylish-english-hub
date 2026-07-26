@@ -12,16 +12,15 @@ import { useLanguage } from '@/contexts/LanguageContext';
 import { LanguageSwitchLight } from '@/components/ui/LanguageSwitch';
 import { academyData } from '@/data/academyData';
 
-// ✅ FIX 1: Import the server action directly instead of using useAuth()
+// ✅ FIXED: Updated import path to match your project structure
 import { registerUser } from '@/lib/db/auth';
 
-// ✅ FIX 2: Changed 'name' to 'fullName' to match the backend expectations
 const registerSchema = z
   .object({
-    fullName: z.string().min(1, 'Required').min(2, 'Too short'),
-    email: z.string().min(1, 'Required').email('Invalid'),
-    password: z.string().min(1, 'Required').min(8, 'Too short'),
-    confirmPassword: z.string().min(1, 'Required'),
+    fullName: z.string().min(2, 'Full name must be at least 2 characters'),
+    email: z.string().email('Please enter a valid email address'),
+    password: z.string().min(8, 'Password must be at least 8 characters'),
+    confirmPassword: z.string().min(1, 'Please confirm your password'),
   })
   .refine((data) => data.password === data.confirmPassword, {
     message: "Passwords don't match",
@@ -36,24 +35,20 @@ export default function StaffRegisterPage() {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [error, setError] = useState('');
-  const [isLoading, setIsLoading] = useState(false);
 
   const {
     register,
     handleSubmit,
-    formState: { errors },
+    formState: { errors, isSubmitting },
   } = useForm<RegisterFormData>({
     resolver: zodResolver(registerSchema),
     defaultValues: { fullName: '', email: '', password: '', confirmPassword: '' },
   });
 
   const onSubmit = async (data: RegisterFormData) => {
-    if (isLoading) return;
     setError('');
-    setIsLoading(true);
-
     try {
-      // ✅ FIX 3: Call the server action directly with the correct object structure
+      // Calls the server action directly
       const result = await registerUser({
         fullName: data.fullName,
         email: data.email,
@@ -61,17 +56,15 @@ export default function StaffRegisterPage() {
       });
 
       if (result.success) {
-        // The backend automatically sets the secure cookie, 
-        // so we can redirect straight to the dashboard!
+        // Refresh to ensure middleware picks up the new session cookie
+        router.refresh();
         router.push('/staff/dashboard');
       } else {
-        setError(result.error || t.staff.register.error);
-        setIsLoading(false);
+        setError(result.error || t.staff?.register?.error || 'Registration failed');
       }
     } catch (err) {
-      console.error("Registration error:", err);
-      setError(t.staff.register.error);
-      setIsLoading(false);
+      console.error('Registration error:', err);
+      setError(t.staff?.register?.error || 'An unexpected error occurred');
     }
   };
 
@@ -89,7 +82,7 @@ export default function StaffRegisterPage() {
           className="inline-flex items-center gap-2 text-white/80 hover:text-white mb-6 transition-colors group"
         >
           <ArrowLeft className="w-4 h-4 transition-transform group-hover:-translate-x-1" />
-          <span>{t.common.back}</span>
+          <span>{t.common?.back || 'Back'}</span>
         </Link>
 
         <div className="card p-8 bg-white rounded-xl shadow-xl">
@@ -99,7 +92,9 @@ export default function StaffRegisterPage() {
               <GraduationCap className="w-10 h-10 text-white" />
             </div>
             <h1 className="text-xl font-bold text-text-primary">{academyData.name}</h1>
-            <p className="text-text-secondary text-sm mt-1">{t.staff.register.heading}</p>
+            <p className="text-text-secondary text-sm mt-1">
+              {t.staff?.register?.heading || 'Create your staff account'}
+            </p>
           </div>
 
           {/* Language Switch */}
@@ -108,12 +103,11 @@ export default function StaffRegisterPage() {
           </div>
 
           {/* Register Form */}
-          <form onSubmit={handleSubmit(onSubmit)} className="space-y-6" noValidate>
-            
-            {/* ✅ FIX 4: Updated field to 'fullName' */}
+          <form onSubmit={handleSubmit(onSubmit)} className="space-y-5" noValidate>
+            {/* Full Name */}
             <div className="form-group flex flex-col gap-1.5">
               <label htmlFor="fullName" className="form-label text-sm font-medium text-text-primary">
-                {t.staff.register.fullName}
+                {t.staff?.register?.fullName || 'Full Name'}
               </label>
               <input
                 type="text"
@@ -124,13 +118,11 @@ export default function StaffRegisterPage() {
                 }`}
                 placeholder="Jane Doe"
                 autoComplete="name"
-                disabled={isLoading}
+                disabled={isSubmitting}
               />
               {errors.fullName && (
                 <p className="form-error text-xs text-red-500 font-medium">
-                  {errors.fullName.message === 'Too short'
-                    ? t.errors?.tooShort || 'Too short'
-                    : t.errors?.required || 'Required'}
+                  {errors.fullName.message}
                 </p>
               )}
             </div>
@@ -138,7 +130,7 @@ export default function StaffRegisterPage() {
             {/* Email */}
             <div className="form-group flex flex-col gap-1.5">
               <label htmlFor="email" className="form-label text-sm font-medium text-text-primary">
-                {t.staff.register.email}
+                {t.staff?.register?.email || 'Email Address'}
               </label>
               <input
                 type="email"
@@ -149,11 +141,11 @@ export default function StaffRegisterPage() {
                 }`}
                 placeholder="staff@stylishenglish.com"
                 autoComplete="email"
-                disabled={isLoading}
+                disabled={isSubmitting}
               />
               {errors.email && (
                 <p className="form-error text-xs text-red-500 font-medium">
-                  {errors.email.type === 'email' ? t.errors?.invalidEmail || 'Invalid email' : t.errors?.required || 'Required'}
+                  {errors.email.message}
                 </p>
               )}
             </div>
@@ -161,7 +153,7 @@ export default function StaffRegisterPage() {
             {/* Password */}
             <div className="form-group flex flex-col gap-1.5">
               <label htmlFor="password" className="form-label text-sm font-medium text-text-primary">
-                {t.staff.register.password}
+                {t.staff?.register?.password || 'Password'}
               </label>
               <div className="relative">
                 <input
@@ -173,23 +165,21 @@ export default function StaffRegisterPage() {
                   }`}
                   placeholder="••••••••"
                   autoComplete="new-password"
-                  disabled={isLoading}
+                  disabled={isSubmitting}
                 />
                 <button
                   type="button"
                   onClick={() => setShowPassword((prev) => !prev)}
                   className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors"
-                  aria-label={showPassword ? t.staff.login.hidePassword : t.staff.login.showPassword}
-                  disabled={isLoading}
+                  aria-label={showPassword ? 'Hide password' : 'Show password'}
+                  disabled={isSubmitting}
                 >
                   {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
                 </button>
               </div>
               {errors.password && (
                 <p className="form-error text-xs text-red-500 font-medium">
-                  {errors.password.message === 'Too short'
-                    ? 'Password must be at least 8 characters'
-                    : t.errors?.required || 'Required'}
+                  {errors.password.message}
                 </p>
               )}
             </div>
@@ -197,7 +187,7 @@ export default function StaffRegisterPage() {
             {/* Confirm Password */}
             <div className="form-group flex flex-col gap-1.5">
               <label htmlFor="confirmPassword" className="form-label text-sm font-medium text-text-primary">
-                {t.staff.register.confirmPassword}
+                {t.staff?.register?.confirmPassword || 'Confirm Password'}
               </label>
               <div className="relative">
                 <input
@@ -209,23 +199,21 @@ export default function StaffRegisterPage() {
                   }`}
                   placeholder="••••••••"
                   autoComplete="new-password"
-                  disabled={isLoading}
+                  disabled={isSubmitting}
                 />
                 <button
                   type="button"
                   onClick={() => setShowConfirmPassword((prev) => !prev)}
                   className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors"
-                  aria-label={showConfirmPassword ? t.staff.login.hidePassword : t.staff.login.showPassword}
-                  disabled={isLoading}
+                  aria-label={showConfirmPassword ? 'Hide password' : 'Show password'}
+                  disabled={isSubmitting}
                 >
                   {showConfirmPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
                 </button>
               </div>
               {errors.confirmPassword && (
                 <p className="form-error text-xs text-red-500 font-medium">
-                  {errors.confirmPassword.message === "Passwords don't match"
-                    ? t.errors?.passwordMismatch || "Passwords don't match"
-                    : t.errors?.required || 'Required'}
+                  {errors.confirmPassword.message}
                 </p>
               )}
             </div>
@@ -248,33 +236,32 @@ export default function StaffRegisterPage() {
             {/* Submit Button */}
             <button
               type="submit"
-              disabled={isLoading}
+              disabled={isSubmitting}
               className="btn btn-primary w-full flex items-center justify-center gap-2 p-2.5 bg-primary text-white rounded-lg hover:bg-primary-dark transition-colors disabled:opacity-50 disabled:cursor-not-allowed font-medium"
             >
-              {isLoading ? (
+              {isSubmitting ? (
                 <>
                   <Loader2 className="w-5 h-5 animate-spin" />
-                  {/* ✅ FIX 5: Updated translation key to 'creating' */}
-                  <span>{t.staff.register.creating}</span>
+                  <span>{t.staff?.register?.creating || 'Creating account...'}</span>
                 </>
               ) : (
-                <span>{t.staff.register.registerButton}</span>
+                <span>{t.staff?.register?.registerButton || 'Create Account'}</span>
               )}
             </button>
           </form>
 
           {/* Link to Login */}
           <p className="text-center text-sm text-text-secondary mt-6">
-            {t.staff.register.haveAccount}{' '}
+            {t.staff?.register?.haveAccount || 'Already have an account?'}{' '}
             <Link href="/staff-login" className="text-primary font-medium hover:underline">
-              {t.staff.register.loginLink}
+              {t.staff?.register?.loginLink || 'Sign in'}
             </Link>
           </p>
         </div>
 
         {/* Copyright */}
         <p className="text-center text-white/60 text-sm mt-6">
-          © 2026 {academyData.name}
+          © {new Date().getFullYear()} {academyData.name}
         </p>
       </motion.div>
     </div>

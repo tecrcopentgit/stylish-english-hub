@@ -104,7 +104,7 @@ const fetchFeeStructures = async () => {
     const response = await fetch(url, {
       method: editingFee ? 'PUT' : 'POST',
       headers: { 'Content-Type': 'application/json' },
-      credentials: 'include',          // ← 👈 Add this
+      credentials: 'include',   
       body: JSON.stringify({
         ...data,
         totalFee: totalFee.toString(),
