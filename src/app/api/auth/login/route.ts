@@ -31,16 +31,16 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Check active status (optional - remove if your schema doesn't have is_active)
-    if ('is_active' in staffMember && !staffMember.is_active) {
+    // Check active status (optional - remove if your schema doesn't have isActive)
+    if ('isActive' in staffMember && !staffMember.isActive) {
       return NextResponse.json(
         { error: 'Account is inactive' },
         { status: 401 }
       );
     }
 
-    // Verify password using snake_case field name
-    const isValid = await verifyPassword(password, staffMember.password_hash);
+    // Verify password using camelCase field name (matches Drizzle schema)
+    const isValid = await verifyPassword(password, staffMember.passwordHash); // ✅ Fixed: passwordHash not password_hash
     if (!isValid) {
       return NextResponse.json(
         { error: 'Invalid email or password' },
@@ -52,7 +52,7 @@ export async function POST(request: NextRequest) {
     const token = await createToken({
       id: staffMember.id,
       email: staffMember.email,
-      name: staffMember.full_name, // ✅ fixed: full_name not name
+      name: staffMember.fullName || staffMember.full_name || 'Staff', // Try both camelCase and snake_case
       role: staffMember.role,
     });
 
@@ -64,7 +64,7 @@ export async function POST(request: NextRequest) {
       user: {
         id: staffMember.id,
         email: staffMember.email,
-        name: staffMember.full_name || 'Staff', // ✅ fixed: full_name not name
+        name: staffMember.fullName || staffMember.full_name || 'Staff', // Try both camelCase and snake_case
         role: staffMember.role,
       },
     });
