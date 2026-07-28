@@ -11,7 +11,8 @@ import reading from '../../assets/images/reading.jpeg';
 import speaking from '../../assets/images/speaking.jpg';
 import events from '../../assets/images/events.jpeg';
 import presentation from '../../assets/images/presentation.jpeg';
-import handwriting from '../../assets/images/handwriting.jpeg'
+import handwriting from '../../assets/images/handwriting.jpeg';
+import gd from '../../assets/images/gd.jpeg';
 import Image from 'next/image';
 
 // Placeholder images until real ones are uploaded
@@ -23,7 +24,7 @@ const placeholderImages = [
   { id: '5', src: presentation, category: 'presentations', caption: { en: 'Student Presentation', ta: 'மாணவர் விளக்கவுரை' } },
   { id: '6', src:events ,category: 'events', caption: { en: 'Academy Event', ta: 'அகாடமி நிகழ்வு' } },
   {id:'7' , src:handwriting , category:'hand-writing' , caption: {en:'Hand Writing' , ta:'கையெழுத்துப் பயிற்சி வகுப்பு'}},
-  {id:'8' , src:handwriting , category: 'group-discussion' , caption: { en:"Group Discussion" , ta: "குழு விவாதம் "}}
+  {id:'8' , src:gd , category: 'group-discussion' , caption: { en:"Group Discussion" , ta: "குழு விவாதம் "}}
 ];
 
 export default function Gallery() {

@@ -97,7 +97,7 @@ export default function Leadership() {
                     </div>
 
                     {/* Profile Bio */}
-                    <p className="text-sm text-text-secondary leading-relaxed mb-4 line-clamp-3">
+                    <p className="text-xs text-text-secondary leading-relaxed mb-4 ">
                       {leader.profile[langKey]}
                     </p>
 
