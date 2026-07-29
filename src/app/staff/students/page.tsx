@@ -12,6 +12,8 @@ import {
   CheckCircle,
   Phone,
   MessageCircle,
+  Trash2,
+  AlertTriangle,
 } from 'lucide-react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -37,7 +39,7 @@ type StudentFormData = z.infer<typeof studentSchema>;
 
 const classOptions = [
   'LKG', 'UKG', 'Grade 1', 'Grade 2', 'Grade 3', 'Grade 4', 'Grade 5',
-  'Grade 6', 'Grade 7', 'Grade 8', 'Grade 9', 'Grade 10', 'Grade 11', 'Grade 12'
+  'Grade 6', 'Grade 7', 'Grade 8', 'Grade 9', 'Grade 10', 'Grade 11', 'Grade 12',
 ];
 
 const shiftOptions = ['shift1', 'shift2'];
@@ -54,6 +56,15 @@ export default function StudentsPage() {
   const [filterShift, setFilterShift] = useState('');
   const [filterStatus, setFilterStatus] = useState('');
   const [successMessage, setSuccessMessage] = useState('');
+  const [errorMessage, setErrorMessage] = useState('');
+
+  // ★ DELETE CONFIRMATION STATE
+  const [deleteConfirm, setDeleteConfirm] = useState<{
+    open: boolean;
+    student: Student | null;
+    type: 'delete' | 'deactivate';
+  }>({ open: false, student: null, type: 'delete' });
+  const [isDeleting, setIsDeleting] = useState(false);
 
   const {
     register,
@@ -72,6 +83,21 @@ export default function StudentsPage() {
   useEffect(() => {
     filterStudents();
   }, [students, searchTerm, filterClass, filterShift, filterStatus]);
+
+  // Auto-dismiss messages
+  useEffect(() => {
+    if (successMessage) {
+      const t = setTimeout(() => setSuccessMessage(''), 4000);
+      return () => clearTimeout(t);
+    }
+  }, [successMessage]);
+
+  useEffect(() => {
+    if (errorMessage) {
+      const t = setTimeout(() => setErrorMessage(''), 5000);
+      return () => clearTimeout(t);
+    }
+  }, [errorMessage]);
 
   const fetchStudents = async () => {
     try {
@@ -155,7 +181,7 @@ export default function StudentsPage() {
       const url = editingStudent
         ? `/api/staff/students/${editingStudent.id}`
         : '/api/staff/students';
-      
+
       const response = await fetch(url, {
         method: editingStudent ? 'PUT' : 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -164,30 +190,90 @@ export default function StudentsPage() {
 
       if (response.ok) {
         setIsModalOpen(false);
-        setSuccessMessage(t.staff.students.saveSuccess);
-        setTimeout(() => setSuccessMessage(''), 3000);
+        setSuccessMessage(
+          editingStudent
+            ? t.staff.students.saveSuccess
+            : t.staff.students.saveSuccess
+        );
         fetchStudents();
+      } else {
+        const err = await response.json();
+        setErrorMessage(err.error || 'Failed to save student');
       }
     } catch (error) {
       console.error('Error saving student:', error);
+      setErrorMessage('Failed to save student');
     }
   };
 
-  const handleDeactivate = async (studentId: number) => {
-    if (!confirm(t.staff.students.confirmDeactivate)) return;
+  // ★ OPEN DELETE CONFIRMATION
+  const openDeleteConfirm = (student: Student) => {
+    setDeleteConfirm({ open: true, student, type: 'delete' });
+  };
+
+  // ★ OPEN DEACTIVATE CONFIRMATION
+  const openDeactivateConfirm = (student: Student) => {
+    setDeleteConfirm({ open: true, student, type: 'deactivate' });
+  };
+
+  // ★ HANDLE PERMANENT DELETE
+  const handleDelete = async () => {
+    if (!deleteConfirm.student) return;
+    setIsDeleting(true);
 
     try {
-      const response = await fetch(`/api/staff/students/${studentId}/deactivate`, {
-        method: 'POST',
-      });
+      const response = await fetch(
+        `/api/staff/students/${deleteConfirm.student.id}`,
+        { method: 'DELETE' }
+      );
 
       if (response.ok) {
-        setSuccessMessage(t.staff.students.deleteSuccess);
-        setTimeout(() => setSuccessMessage(''), 3000);
+        setSuccessMessage(
+          `${deleteConfirm.student.studentName} has been permanently deleted`
+        );
+        // Remove from local state immediately
+        setStudents((prev) =>
+          prev.filter((s) => s.id !== deleteConfirm.student!.id)
+        );
+      } else {
+        const err = await response.json();
+        setErrorMessage(err.error || 'Failed to delete student');
+      }
+    } catch (error) {
+      console.error('Error deleting student:', error);
+      setErrorMessage('Failed to delete student');
+    } finally {
+      setIsDeleting(false);
+      setDeleteConfirm({ open: false, student: null, type: 'delete' });
+    }
+  };
+
+  // ★ HANDLE DEACTIVATE (soft delete)
+  const handleDeactivate = async () => {
+    if (!deleteConfirm.student) return;
+    setIsDeleting(true);
+
+    try {
+      const response = await fetch(
+        `/api/staff/students/${deleteConfirm.student.id}/deactivate`,
+        { method: 'POST' }
+      );
+
+      if (response.ok) {
+        setSuccessMessage(
+          `${deleteConfirm.student.studentName} has been deactivated`
+        );
         fetchStudents();
+      } else {
+        const err = await response.json();
+        setErrorMessage(err.error || 'Failed to deactivate student');
       }
     } catch (error) {
       console.error('Error deactivating student:', error);
+      setErrorMessage('Failed to deactivate student');
+    } finally {
+      setIsDeleting(false);
+      setDeleteConfirm({ open: false, student: null, type: 'deactivate' });
     }
   };
 
@@ -211,10 +297,25 @@ export default function StudentsPage() {
             initial={{ opacity: 0, y: -10 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0 }}
-            className="mb-4 p-4 bg-green-50 text-green-700 rounded-lg flex items-center gap-2"
+            className="mb-4 p-4 bg-green-50 border border-green-200 text-green-700 rounded-lg flex items-center gap-2"
           >
-            <CheckCircle className="w-5 h-5" />
+            <CheckCircle className="w-5 h-5 shrink-0" />
             {successMessage}
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Error Message */}
+      <AnimatePresence>
+        {errorMessage && (
+          <motion.div
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0 }}
+            className="mb-4 p-4 bg-red-50 border border-red-200 text-red-700 rounded-lg flex items-center gap-2"
+          >
+            <AlertTriangle className="w-5 h-5 shrink-0" />
+            {errorMessage}
           </motion.div>
         )}
       </AnimatePresence>
@@ -222,7 +323,6 @@ export default function StudentsPage() {
       {/* Filters */}
       <div className="card p-4 mb-6">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
-          {/* Search */}
           <div className="lg:col-span-2">
             <div className="relative">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
@@ -236,7 +336,6 @@ export default function StudentsPage() {
             </div>
           </div>
 
-          {/* Class Filter */}
           <select
             value={filterClass}
             onChange={(e) => setFilterClass(e.target.value)}
@@ -244,11 +343,12 @@ export default function StudentsPage() {
           >
             <option value="">{t.staff.students.allClasses}</option>
             {classOptions.map((cls) => (
-              <option key={cls} value={cls}>{cls}</option>
+              <option key={cls} value={cls}>
+                {cls}
+              </option>
             ))}
           </select>
 
-          {/* Shift Filter */}
           <select
             value={filterShift}
             onChange={(e) => setFilterShift(e.target.value)}
@@ -262,7 +362,6 @@ export default function StudentsPage() {
             ))}
           </select>
 
-          {/* Status Filter */}
           <select
             value={filterStatus}
             onChange={(e) => setFilterStatus(e.target.value)}
@@ -274,6 +373,11 @@ export default function StudentsPage() {
             <option value="discontinued">{t.staff.students.discontinued}</option>
           </select>
         </div>
+      </div>
+
+      {/* Students Count */}
+      <div className="mb-4 text-sm text-text-secondary">
+        Showing {filteredStudents.length} of {students.length} students
       </div>
 
       {/* Students List */}
@@ -288,7 +392,7 @@ export default function StudentsPage() {
           </div>
         ) : (
           <>
-            {/* Desktop Table */}
+            {/* ==================== DESKTOP TABLE ==================== */}
             <div className="hidden lg:block table-container">
               <table className="data-table">
                 <thead>
@@ -301,22 +405,29 @@ export default function StudentsPage() {
                     <th>{t.staff.students.phone}</th>
                     <th>{t.staff.students.monthlyFee}</th>
                     <th>{t.staff.students.status}</th>
-                    <th>{t.staff.students.actions}</th>
+                    <th className="text-center">{t.staff.students.actions}</th>
                   </tr>
                 </thead>
                 <tbody>
                   {filteredStudents.map((student) => (
                     <tr key={student.id}>
-                      <td className="font-medium">{student.admissionNumber}</td>
+                      <td className="font-medium">
+                        {student.admissionNumber}
+                      </td>
                       <td>{student.studentName}</td>
                       <td>{student.parentName}</td>
                       <td>{student.className}</td>
                       <td>
-                        {student.shift === 'shift1' ? '5:30-7:00 PM' : '7:00-8:30 PM'}
+                        {student.shift === 'shift1'
+                          ? '5:30-7:00 PM'
+                          : '7:00-8:30 PM'}
                       </td>
                       <td>
                         <div className="flex items-center gap-2">
-                          <a href={`tel:${student.phoneNumber}`} className="text-primary hover:underline">
+                          <a
+                            href={`tel:${student.phoneNumber}`}
+                            className="text-primary hover:underline"
+                          >
                             {student.phoneNumber}
                           </a>
                           {student.whatsappNumber && (
@@ -331,32 +442,53 @@ export default function StudentsPage() {
                           )}
                         </div>
                       </td>
-                      <td>₹{Number(student.monthlyFee).toLocaleString('en-IN')}</td>
                       <td>
-                        <span className={`status-${student.status === 'active' ? 'present' : 'absent'}`}>
-                          {student.status === 'active' ? t.staff.students.active : 
-                           student.status === 'inactive' ? t.staff.students.inactive : 
-                           t.staff.students.discontinued}
-                        </span>
+                        ₹{Number(student.monthlyFee).toLocaleString('en-IN')}
                       </td>
                       <td>
-                        <div className="flex items-center gap-2">
+                        <span
+                          className={`status-${
+                            student.status === 'active' ? 'present' : 'absent'
+                          }`}
+                        >
+                          {student.status === 'active'
+                            ? t.staff.students.active
+                            : student.status === 'inactive'
+                            ? t.staff.students.inactive
+                            : t.staff.students.discontinued}
+                        </span>
+                      </td>
+                      {/* ★ UPDATED ACTIONS COLUMN */}
+                      <td>
+                        <div className="flex items-center justify-center gap-1">
+                          {/* Edit */}
                           <button
                             onClick={() => openEditModal(student)}
-                            className="p-2 text-primary hover:bg-primary/10 rounded-lg transition-colors"
-                            aria-label="Edit"
+                            className="p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
+                            title="Edit student"
                           >
                             <Edit className="w-4 h-4" />
                           </button>
+
+                          {/* Deactivate — only for active students */}
                           {student.status === 'active' && (
                             <button
-                              onClick={() => handleDeactivate(student.id)}
-                              className="p-2 text-red-500 hover:bg-red-50 rounded-lg transition-colors"
-                              aria-label="Deactivate"
+                              onClick={() => openDeactivateConfirm(student)}
+                              className="p-2 text-amber-600 hover:bg-amber-50 rounded-lg transition-colors"
+                              title="Deactivate student"
                             >
                               <UserX className="w-4 h-4" />
                             </button>
                           )}
+
+                          {/* ★ DELETE — permanent */}
+                          <button
+                            onClick={() => openDeleteConfirm(student)}
+                            className="p-2 text-red-500 hover:bg-red-50 rounded-lg transition-colors"
+                            title="Delete student permanently"
+                          >
+                            <Trash2 className="w-4 h-4" />
+                          </button>
                         </div>
                       </td>
                     </tr>
@@ -365,56 +497,122 @@ export default function StudentsPage() {
               </table>
             </div>
 
-            {/* Mobile Cards */}
-            <div className="lg:hidden mobile-card-view p-4">
+            {/* ==================== MOBILE CARDS ==================== */}
+            <div className="lg:hidden mobile-card-view p-4 space-y-4">
               {filteredStudents.map((student) => (
-                <div key={student.id} className="card-item">
+                <div
+                  key={student.id}
+                  className="card-item bg-white border border-gray-200 rounded-xl p-4 shadow-sm"
+                >
+                  {/* Header */}
                   <div className="flex items-start justify-between mb-3">
                     <div>
-                      <p className="font-semibold text-text-primary">{student.studentName}</p>
-                      <p className="text-sm text-text-secondary">{student.admissionNumber}</p>
+                      <p className="font-semibold text-text-primary">
+                        {student.studentName}
+                      </p>
+                      <p className="text-sm text-text-secondary">
+                        {student.admissionNumber}
+                      </p>
                     </div>
-                    <span className={`status-${student.status === 'active' ? 'present' : 'absent'}`}>
-                      {student.status === 'active' ? t.staff.students.active : t.staff.students.inactive}
+                    <span
+                      className={`status-${
+                        student.status === 'active' ? 'present' : 'absent'
+                      }`}
+                    >
+                      {student.status === 'active'
+                        ? t.staff.students.active
+                        : student.status === 'inactive'
+                        ? t.staff.students.inactive
+                        : t.staff.students.discontinued}
                     </span>
                   </div>
-                  <div className="card-row">
-                    <span className="card-label">{t.staff.students.parentName}</span>
-                    <span className="card-value">{student.parentName}</span>
-                  </div>
-                  <div className="card-row">
-                    <span className="card-label">{t.staff.students.class}</span>
-                    <span className="card-value">{student.className}</span>
-                  </div>
-                  <div className="card-row">
-                    <span className="card-label">{t.staff.students.phone}</span>
-                    <span className="card-value flex items-center gap-2">
-                      <a href={`tel:${student.phoneNumber}`} className="text-primary">
-                        <Phone className="w-4 h-4" />
-                      </a>
-                      {student.whatsappNumber && (
+
+                  {/* Details */}
+                  <div className="space-y-2 text-sm">
+                    <div className="card-row flex justify-between">
+                      <span className="card-label text-text-secondary">
+                        {t.staff.students.parentName}
+                      </span>
+                      <span className="card-value font-medium">
+                        {student.parentName}
+                      </span>
+                    </div>
+                    <div className="card-row flex justify-between">
+                      <span className="card-label text-text-secondary">
+                        {t.staff.students.class}
+                      </span>
+                      <span className="card-value font-medium">
+                        {student.className} •{' '}
+                        {student.shift === 'shift1'
+                          ? '5:30-7:00 PM'
+                          : '7:00-8:30 PM'}
+                      </span>
+                    </div>
+                    <div className="card-row flex justify-between">
+                      <span className="card-label text-text-secondary">
+                        {t.staff.students.phone}
+                      </span>
+                      <span className="card-value flex items-center gap-2">
                         <a
-                          href={`https://wa.me/${student.whatsappNumber.replace(/\D/g, '')}`}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="text-green-500"
+                          href={`tel:${student.phoneNumber}`}
+                          className="text-primary"
                         >
-                          <MessageCircle className="w-4 h-4" />
+                          <Phone className="w-4 h-4" />
                         </a>
-                      )}
-                    </span>
+                        {student.whatsappNumber && (
+                          <a
+                            href={`https://wa.me/${student.whatsappNumber.replace(/\D/g, '')}`}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-green-500"
+                          >
+                            <MessageCircle className="w-4 h-4" />
+                          </a>
+                        )}
+                        <span className="text-text-primary">
+                          {student.phoneNumber}
+                        </span>
+                      </span>
+                    </div>
+                    <div className="card-row flex justify-between">
+                      <span className="card-label text-text-secondary">
+                        {t.staff.students.monthlyFee}
+                      </span>
+                      <span className="card-value font-semibold text-text-primary">
+                        ₹{Number(student.monthlyFee).toLocaleString('en-IN')}
+                      </span>
+                    </div>
                   </div>
-                  <div className="card-row">
-                    <span className="card-label">{t.staff.students.monthlyFee}</span>
-                    <span className="card-value">₹{Number(student.monthlyFee).toLocaleString('en-IN')}</span>
-                  </div>
-                  <div className="flex gap-2 mt-3 pt-3 border-t">
+
+                  {/* ★ MOBILE ACTION BUTTONS */}
+                  <div className="flex gap-2 mt-4 pt-3 border-t border-gray-100">
+                    {/* Edit */}
                     <button
                       onClick={() => openEditModal(student)}
-                      className="btn btn-secondary flex-1 text-sm py-2"
+                      className="flex-1 flex items-center justify-center gap-1.5 px-3 py-2 text-sm font-medium text-blue-600 bg-blue-50 hover:bg-blue-100 rounded-lg transition-colors"
                     >
                       <Edit className="w-4 h-4" />
                       {t.common.edit}
+                    </button>
+
+                    {/* Deactivate — only for active */}
+                    {student.status === 'active' && (
+                      <button
+                        onClick={() => openDeactivateConfirm(student)}
+                        className="flex-1 flex items-center justify-center gap-1.5 px-3 py-2 text-sm font-medium text-amber-600 bg-amber-50 hover:bg-amber-100 rounded-lg transition-colors"
+                      >
+                        <UserX className="w-4 h-4" />
+                        Deactivate
+                      </button>
+                    )}
+
+                    {/* ★ Delete */}
+                    <button
+                      onClick={() => openDeleteConfirm(student)}
+                      className="flex items-center justify-center gap-1.5 px-3 py-2 text-sm font-medium text-red-600 bg-red-50 hover:bg-red-100 rounded-lg transition-colors"
+                    >
+                      <Trash2 className="w-4 h-4" />
+                      Delete
                     </button>
                   </div>
                 </div>
@@ -424,20 +622,25 @@ export default function StudentsPage() {
         )}
       </div>
 
-      {/* Add/Edit Modal */}
+      {/* ==================== ADD/EDIT MODAL ==================== */}
       <AnimatePresence>
         {isModalOpen && (
-          <div className="modal-overlay" onClick={() => setIsModalOpen(false)}>
+          <div
+            className="modal-overlay fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-start justify-center pt-10 px-4 overflow-y-auto"
+            onClick={() => setIsModalOpen(false)}
+          >
             <motion.div
               initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, scale: 0.95 }}
-              className="modal-content max-w-2xl"
+              className="modal-content max-w-2xl w-full bg-white rounded-2xl shadow-2xl mb-10"
               onClick={(e) => e.stopPropagation()}
             >
               <div className="p-6 border-b flex items-center justify-between">
                 <h2 className="text-xl font-bold text-text-primary">
-                  {editingStudent ? t.staff.students.editStudent : t.staff.students.addStudent}
+                  {editingStudent
+                    ? t.staff.students.editStudent
+                    : t.staff.students.addStudent}
                 </h2>
                 <button
                   onClick={() => setIsModalOpen(false)}
@@ -447,82 +650,171 @@ export default function StudentsPage() {
                 </button>
               </div>
 
-              <form onSubmit={handleSubmit(onSubmit)} className="p-6 space-y-4">
+              <form
+                onSubmit={handleSubmit(onSubmit)}
+                className="p-6 space-y-4"
+              >
                 <div className="grid sm:grid-cols-2 gap-4">
                   <div className="form-group">
-                    <label className="form-label">{t.staff.students.admissionNo} *</label>
-                    <input {...register('admissionNumber')} className="form-input" />
-                    {errors.admissionNumber && <p className="form-error">{errors.admissionNumber.message}</p>}
+                    <label className="form-label">
+                      {t.staff.students.admissionNo} *
+                    </label>
+                    <input
+                      {...register('admissionNumber')}
+                      className="form-input"
+                    />
+                    {errors.admissionNumber && (
+                      <p className="form-error">
+                        {errors.admissionNumber.message}
+                      </p>
+                    )}
                   </div>
                   <div className="form-group">
-                    <label className="form-label">{t.staff.students.studentName} *</label>
-                    <input {...register('studentName')} className="form-input" />
-                    {errors.studentName && <p className="form-error">{errors.studentName.message}</p>}
+                    <label className="form-label">
+                      {t.staff.students.studentName} *
+                    </label>
+                    <input
+                      {...register('studentName')}
+                      className="form-input"
+                    />
+                    {errors.studentName && (
+                      <p className="form-error">
+                        {errors.studentName.message}
+                      </p>
+                    )}
                   </div>
                 </div>
 
                 <div className="grid sm:grid-cols-2 gap-4">
                   <div className="form-group">
-                    <label className="form-label">{t.staff.students.parentName} *</label>
-                    <input {...register('parentName')} className="form-input" />
-                    {errors.parentName && <p className="form-error">{errors.parentName.message}</p>}
+                    <label className="form-label">
+                      {t.staff.students.parentName} *
+                    </label>
+                    <input
+                      {...register('parentName')}
+                      className="form-input"
+                    />
+                    {errors.parentName && (
+                      <p className="form-error">
+                        {errors.parentName.message}
+                      </p>
+                    )}
                   </div>
                   <div className="form-group">
                     <label className="form-label">School Name</label>
-                    <input {...register('schoolName')} className="form-input" />
+                    <input
+                      {...register('schoolName')}
+                      className="form-input"
+                    />
                   </div>
                 </div>
 
                 <div className="grid sm:grid-cols-2 gap-4">
                   <div className="form-group">
-                    <label className="form-label">{t.staff.students.class} *</label>
-                    <select {...register('className')} className="form-select">
+                    <label className="form-label">
+                      {t.staff.students.class} *
+                    </label>
+                    <select
+                      {...register('className')}
+                      className="form-select"
+                    >
                       <option value="">Select Class</option>
                       {classOptions.map((cls) => (
-                        <option key={cls} value={cls}>{cls}</option>
+                        <option key={cls} value={cls}>
+                          {cls}
+                        </option>
                       ))}
                     </select>
-                    {errors.className && <p className="form-error">{errors.className.message}</p>}
+                    {errors.className && (
+                      <p className="form-error">
+                        {errors.className.message}
+                      </p>
+                    )}
                   </div>
                   <div className="form-group">
-                    <label className="form-label">{t.staff.students.shift} *</label>
+                    <label className="form-label">
+                      {t.staff.students.shift} *
+                    </label>
                     <select {...register('shift')} className="form-select">
                       <option value="">Select Shift</option>
                       <option value="shift1">5:30 PM – 7:00 PM</option>
                       <option value="shift2">7:00 PM – 8:30 PM</option>
                     </select>
-                    {errors.shift && <p className="form-error">{errors.shift.message}</p>}
+                    {errors.shift && (
+                      <p className="form-error">{errors.shift.message}</p>
+                    )}
                   </div>
                 </div>
 
                 <div className="grid sm:grid-cols-2 gap-4">
                   <div className="form-group">
-                    <label className="form-label">{t.staff.students.phone} *</label>
-                    <input {...register('phoneNumber')} className="form-input" placeholder="+91 XXXXX XXXXX" />
-                    {errors.phoneNumber && <p className="form-error">{errors.phoneNumber.message}</p>}
+                    <label className="form-label">
+                      {t.staff.students.phone} *
+                    </label>
+                    <input
+                      {...register('phoneNumber')}
+                      className="form-input"
+                      placeholder="+91 XXXXX XXXXX"
+                    />
+                    {errors.phoneNumber && (
+                      <p className="form-error">
+                        {errors.phoneNumber.message}
+                      </p>
+                    )}
                   </div>
                   <div className="form-group">
-                    <label className="form-label">{t.staff.students.whatsapp}</label>
-                    <input {...register('whatsappNumber')} className="form-input" placeholder="+91 XXXXX XXXXX" />
+                    <label className="form-label">
+                      {t.staff.students.whatsapp}
+                    </label>
+                    <input
+                      {...register('whatsappNumber')}
+                      className="form-input"
+                      placeholder="+91 XXXXX XXXXX"
+                    />
                   </div>
                 </div>
 
                 <div className="grid sm:grid-cols-2 gap-4">
                   <div className="form-group">
-                    <label className="form-label">{t.staff.students.monthlyFee} *</label>
-                    <input {...register('monthlyFee')} type="number" className="form-input" placeholder="0" />
-                    {errors.monthlyFee && <p className="form-error">{errors.monthlyFee.message}</p>}
+                    <label className="form-label">
+                      {t.staff.students.monthlyFee} *
+                    </label>
+                    <input
+                      {...register('monthlyFee')}
+                      type="number"
+                      className="form-input"
+                      placeholder="0"
+                    />
+                    {errors.monthlyFee && (
+                      <p className="form-error">
+                        {errors.monthlyFee.message}
+                      </p>
+                    )}
                   </div>
                   <div className="form-group">
-                    <label className="form-label">{t.staff.students.joiningDate} *</label>
-                    <input {...register('joiningDate')} type="date" className="form-input" />
-                    {errors.joiningDate && <p className="form-error">{errors.joiningDate.message}</p>}
+                    <label className="form-label">
+                      {t.staff.students.joiningDate} *
+                    </label>
+                    <input
+                      {...register('joiningDate')}
+                      type="date"
+                      className="form-input"
+                    />
+                    {errors.joiningDate && (
+                      <p className="form-error">
+                        {errors.joiningDate.message}
+                      </p>
+                    )}
                   </div>
                 </div>
 
                 <div className="form-group">
                   <label className="form-label">Notes</label>
-                  <textarea {...register('notes')} className="form-textarea" rows={3} />
+                  <textarea
+                    {...register('notes')}
+                    className="form-textarea"
+                    rows={3}
+                  />
                 </div>
 
                 <div className="flex justify-end gap-3 pt-4 border-t">
@@ -533,12 +825,157 @@ export default function StudentsPage() {
                   >
                     {t.common.cancel}
                   </button>
-                  <button type="submit" disabled={isSubmitting} className="btn btn-primary">
-                    {isSubmitting && <Loader2 className="w-5 h-5 animate-spin" />}
+                  <button
+                    type="submit"
+                    disabled={isSubmitting}
+                    className="btn btn-primary"
+                  >
+                    {isSubmitting && (
+                      <Loader2 className="w-5 h-5 animate-spin" />
+                    )}
                     {t.common.save}
                   </button>
                 </div>
               </form>
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
+
+      {/* ==================== ★ DELETE/DEACTIVATE CONFIRMATION MODAL ==================== */}
+      <AnimatePresence>
+        {deleteConfirm.open && deleteConfirm.student && (
+          <div
+            className="fixed inset-0 bg-black/60 backdrop-blur-sm z-[60] flex items-center justify-center px-4"
+            onClick={() =>
+              !isDeleting &&
+              setDeleteConfirm({ open: false, student: null, type: 'delete' })
+            }
+          >
+            <motion.div
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.9 }}
+              transition={{ duration: 0.15 }}
+              className="w-full max-w-md bg-white rounded-2xl  shadow-2xl overflow-hidden"
+              onClick={(e) => e.stopPropagation()}
+            >
+              {/* Icon */}
+              <div
+                className={`p-6 flex flex-col items-center text-center ${
+                  deleteConfirm.type === 'delete'
+                    ? 'bg-red-50'
+                    : 'bg-amber-50'
+                }`}
+              >
+                <div
+                  className={`w-16 h-16 rounded-full flex flex-col items-center justify-center mb-4 ${
+                    deleteConfirm.type === 'delete'
+                      ? 'bg-red-100'
+                      : 'bg-amber-100'
+                  }`}
+                >
+                  {deleteConfirm.type === 'delete' ? (
+                    <Trash2 className="w-8 h-8 text-red-600" />
+                  ) : (
+                    <UserX className="w-8 h-8 text-amber-600" />
+                  )}
+                </div>
+
+                <h3 className="text-lg font-bold text-gray-900 mb-1">
+                  {deleteConfirm.type === 'delete'
+                    ? 'Delete Student Permanently?'
+                    : 'Deactivate Student?'}
+                </h3>
+
+                <p className="text-sm text-gray-600 mb-2">
+                  {deleteConfirm.type === 'delete' ? (
+                    <>
+                      This will <strong>permanently remove</strong>{' '}
+                      all data for this student including attendance
+                      and payment records. This action{' '}
+                      <strong>cannot be undone</strong>.
+                    </>
+                  ) : (
+                    <>
+                      This will mark the student as inactive. They
+                      won&apos;t appear in attendance but their data
+                      will be preserved.
+                    </>
+                  )}
+                </p>
+              </div>
+
+              {/* Student Info */}
+              <div className="px-6 py-4 bg-gray-50 border-y border-gray-200">
+                <div className="flex   items-center gap-3">
+                  <div className="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center text-blue-700 font-bold text-sm">
+                    {deleteConfirm.student.studentName
+                      .charAt(0)
+                      .toUpperCase()}
+                  </div>
+                  <div>
+                    <p className="font-semibold text-gray-900">
+                      {deleteConfirm.student.studentName}
+                    </p>
+                    <p className="text-xs text-gray-500">
+                      {deleteConfirm.student.admissionNumber} •{' '}
+                      {deleteConfirm.student.className} •{' '}
+                      {deleteConfirm.student.shift === 'shift1'
+                        ? 'Shift 1'
+                        : 'Shift 2'}
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Buttons */}
+              <div className="p-4 flex flex-col lg:flex-row  bg-amber-600 gap-3">
+                <button
+                  onClick={() =>
+                    setDeleteConfirm({
+                      open: false,
+                      student: null,
+                      type: 'delete',
+                    })
+                  }
+                  disabled={isDeleting}
+                  className="flex-1 px-4 py-2.5 text-sm font-semibold text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-lg transition-colors disabled:opacity-50"
+                >
+                  Cancel
+                </button>
+
+                <button
+                  onClick={
+                    deleteConfirm.type === 'delete'
+                      ? handleDelete
+                      : handleDeactivate
+                  }
+                  disabled={isDeleting}
+                  className={`flex-1 px-4 py-2.5 text-sm font-semibold text-white rounded-lg transition-colors disabled:opacity-50 flex items-center justify-center gap-2 ${
+                    deleteConfirm.type === 'delete'
+                      ? 'bg-red-600 hover:bg-red-700'
+                      : 'bg-amber-600 hover:bg-amber-700'
+                  }`}
+                >
+                  {isDeleting ? (
+                    <>
+                      <Loader2 className="w-4 h-4 animate-spin" />
+                      Processing...
+                    </>
+                  ) : deleteConfirm.type === 'delete' ? (
+                    <>
+                      <Trash2 className="w-4 h-4" />
+                      Yes, Delete Permanently
+                    </>
+                  ) : (
+                    <>
+                      <UserX className="w-4 h-4" />
+                      Yes, Deactivate
+                    </>
+                  )}
+                </button>
+              </div>
             </motion.div>
           </div>
         )}
