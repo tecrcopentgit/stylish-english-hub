@@ -156,7 +156,7 @@ export const academyData = {
       },
       qualifications: 'B.Com., MBA ',
       profile: {
-        en: 'R. Mohamed Uvaiz is the Co-Founder and Chief Student Coordinator of Stylish English Academy. He supports students through guidance, communication coaching, motivation, public speaking, personality development, and student engagement. He also contributes to the academy\'s digital growth through social media management and performance marketing.',
+        en: 'R. Mohamed Uvaiz Chief Student Coordinator of Stylish English Academy. He supports students through guidance, communication coaching, motivation, public speaking, personality development, and student engagement. He also contributes to the academy\'s digital growth through social media management and performance marketing.',
         ta: 'R. Mohamed Uvaiz அவர்கள் Stylish English Academy-யின் இணை நிறுவனர் மற்றும் முதன்மை மாணவர் ஒருங்கிணைப்பாளர். மாணவர்களுக்கு வழிகாட்டுதல், தொடர்புத் திறன் பயிற்சி, ஊக்கமளித்தல், மேடைப் பேச்சு மற்றும் ஆளுமைத் திறன் மேம்பாட்டில் ஆதரவு வழங்குகிறார். மேலும் சமூக ஊடக மேலாண்மை மற்றும் டிஜிட்டல் மார்க்கெட்டிங் மூலம் அகாடமியின் வளர்ச்சிக்கும் பங்களிக்கிறார்.',
       },
       roles: {
