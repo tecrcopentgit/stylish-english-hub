@@ -157,7 +157,7 @@ export default function Footer() {
           <div className='flex flex-row items-center justify-center md:justify-normal text-xs  gap-1 ' data-aos='slide-left'>
           <a className='group font-heading  p-1 rounded-full flex gap-2 items-center  hover:scale-104' href='https://gen-z-uv-offical.vercel.app/'>
           <div className='border rounded-full p-1 group-hover:shadow-xl shadow-green-400  border-green-500'><Image className='h-8 w-8 object-cover  border-2 border-green-300 rounded-full' src='https://gen-z-uv-offical.vercel.app/GenZ-logo.jpeg' width={300} height={300}  alt=''/></div>
-          <div className='group  flex items-center'><p>GEN</p><p className='text-2xl group-hover:rotate-20 transition-all ease-in-out duration-2000 text-green-500 font-bold'>Z</p><p>UV</p></div>
+          <div className='group  flex items-center'><p>GEN</p><p className='text-2xl rotate-7 md:rotate-0 md:group-hover:rotate-20 transition-all ease-in-out duration-2000 text-green-500 font-bold'>Z</p><p>UV</p></div>
           </a></div>
         </div>
 
