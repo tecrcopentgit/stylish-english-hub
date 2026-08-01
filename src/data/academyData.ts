@@ -143,15 +143,15 @@ export const academyData = {
       },
     },
     {
-      id: 'cofounder',
+      id: 'coordinator',
       name: 'R. Mohamed Uvaiz',
       image: uvaish_photo,
       title: {
-        en: 'Co-Founder & Chief Student Coordinator',
+        en: 'Chief Student Coordinator',
         ta: 'இணை நிறுவனர் மற்றும் முதன்மை மாணவர் ஒருங்கிணைப்பாளர்',
       },
       designation: {
-        en: 'Co-Founder & Chief Student Coordinator',
+        en: 'Chief Student Coordinator',
         ta: 'இணை நிறுவனர் மற்றும் முதன்மை மாணவர் ஒருங்கிணைப்பாளர்',
       },
       qualifications: 'B.Com., MBA ',
