@@ -930,7 +930,7 @@ export default function StudentsPage() {
               </div>
 
               {/* Buttons */}
-              <div className="p-4 flex flex-col lg:flex-row  bg-amber-600 gap-3">
+              <div className="p-4 flex flex-col lg:flex-row  bg-amber-600 gap-3 ">
                 <button
                   onClick={() =>
                     setDeleteConfirm({

@@ -153,11 +153,12 @@ export default function Footer() {
 
         
         {/* Copyright */}
-        <div className="mt-12 pt-8 border-t border-gray-700">
-          <div className='flex flex-row items-center justify-center md:justify-normal text-xs  gap-1'>
-          <a className='font-mono bg-purple-500/50 p-1 rounded-full border border-red-500 hover:scale-104' href= 'https://tecrcopent.netlify.app'>tecRcoPENT</a>|
-          <a className='font-heading bg-green-500/50 p-1 rounded-full border-green-300 border hover:scale-104' href='https://gen-z-uv-offical.vercel.app/'>GEN-UV</a> |
-          <a className='bg-blue-400/30 border border-cyan-300 p-1 rounded-full hover:scale-104' href='https://abdulhaadhifolio.netlify.app'>AB Haadhi</a>
+        <div className="mt-12 pt-8 border-t border-gray-700 ">
+          <div className='flex flex-row items-center justify-center md:justify-normal text-xs  gap-1 ' data-aos='slide-left'>
+          <a className='group font-heading  p-1 rounded-full flex gap-2 items-center  hover:scale-104' href='https://gen-z-uv-offical.vercel.app/'>
+          <div className='border rounded-full p-1 group-hover:shadow-xl shadow-green-400  border-green-500'><Image className='h-8 w-8 object-cover  border-2 border-green-300 rounded-full' src='https://gen-z-uv-offical.vercel.app/GenZ-logo.jpeg' width={300} height={300}  alt=''/></div>
+          <div className='group  flex items-center'><p>GEN</p><p className='text-2xl group-hover:rotate-20 transition-all ease-in-out duration-2000 text-green-500 font-bold'>Z</p><p>UV</p></div>
+          </a></div>
         </div>
 
           <div className="flex flex-col md:flex-row items-center justify-between gap-4">
@@ -171,7 +172,7 @@ export default function Footer() {
         </div>
 
         
-      </div>
+      
 
       
     </footer>

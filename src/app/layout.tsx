@@ -1,9 +1,11 @@
 import type { Metadata } from "next";
 import { Poppins, Inter } from "next/font/google";
 import "./globals.css";
+import "aos/dist/aos.css"; // 1. Imported AOS styles globally
 import { LanguageProvider } from "@/contexts/LanguageContext";
 import { AuthProvider } from "@/contexts/AuthContext";
 import logo from '../assets/stylish_english_hub.png';
+import ClientInitializer from "@/components/ClientInitialzer"; // 2. Imported the new client-side initializer
 
 const poppins = Poppins({
   subsets: ["latin"],
@@ -72,7 +74,12 @@ export default function RootLayout({
       </head>
       <body className={`${inter.className} antialiased`}>
         <AuthProvider>
-          <LanguageProvider>{children}</LanguageProvider>
+          <LanguageProvider>
+            {/* 3. Wrapped children to execute AOS securely inside the client runtime */}
+            <ClientInitializer>
+              {children}
+            </ClientInitializer>
+          </LanguageProvider>
         </AuthProvider>
       </body>
     </html>
