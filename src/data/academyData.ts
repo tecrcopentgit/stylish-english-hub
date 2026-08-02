@@ -10,7 +10,7 @@ import uvaish_photo from '../assets/uvaish_english.png';
 import zulfia_photo from '../assets/zulfa_mam.jpeg';
 import thasnim_photo from '../assets/thasnim_mam.jpeg'
 import ramala_athika from '@/assets/ramala_athika.jpeg';
-import yahya_photo from '../assets/yahya.jpeg';
+import sirin_photo from '@/assets/sirin.jpeg';
 
 import classroom from '../assets/images/classroom.jpeg';
 
@@ -245,12 +245,12 @@ export const academyData = {
       },
     },
     {
-      id: 'mohamed-yahya',
-      name: 'Mr. R. Mohamed Yahya',
-      image: yahya_photo,
-      qualification: 'B.A. English',
+      id: 'ahamed_sirin',
+      name: 'Mrs. Ahamed Sirin N',
+      image: sirin_photo,
+      qualification: 'B.Sc,. Chemisty & B.Ed.,',
       specialisations: {
-        en: 'English Teaching, English Explanation Through Tamil, Basic Grammar, Spoken English, Communication Skills, History Support',
+        en: 'English Teaching, Maths ,  English Explanation Through Tamil, Basic Grammar, Spoken English, Communication Skills, History Support',
         ta: 'ஆங்கிலப் பாடம், தமிழில் எளிய ஆங்கில விளக்கம், அடிப்படை இலக்கணம், பேச்சு ஆங்கிலம், தொடர்புத் திறன் மற்றும் வரலாற்றுப் பாட உதவி',
       },
       profile: {

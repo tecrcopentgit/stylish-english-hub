@@ -96,14 +96,14 @@ export default function StaffLoginPage() {
               New staff member?
             </p>
             <Link 
-              href="/staff/register"
+              href="/staff-register"
               className="inline-flex items-center justify-center gap-2 px-4 py-2 bg-white border border-blue-200 text-primary rounded-lg hover:bg-blue-50 hover:shadow-sm transition-all font-semibold text-sm"
             >
               <UserPlus className="w-4 h-4" />
               Create Staff Account
             </Link>
             <p className="text-xs text-blue-600 mt-3">
-              Don't have login credentials? <Link href="/staff/register" className="underline font-medium hover:text-blue-800">Register here</Link>
+              Don't have login credentials? <Link href="/staff-register" className="underline font-medium hover:text-blue-800">Register here</Link>
             </p>
           </div>
 
