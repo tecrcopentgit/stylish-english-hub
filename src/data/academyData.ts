@@ -8,7 +8,8 @@
 import kaja_sir from '../assets/kaja_sir.png';
 import uvaish_photo from '../assets/uvaish_english.png';
 import zulfia_photo from '../assets/zulfa_mam.jpeg';
-import thasnim_photo from '../assets/thasnim_mam.jpeg';
+import thasnim_photo from '../assets/thasnim_mam.jpeg'
+import ramala_athika from '@/assets/ramala_athika.jpeg';
 import yahya_photo from '../assets/yahya.jpeg';
 
 import classroom from '../assets/images/classroom.jpeg';
@@ -233,7 +234,7 @@ export const academyData = {
         en: '1/2 Year',
         ta: '1 /2 ஆண்டு கற்பித்தல் அனுபவம்',
       },
-      image: thasnim_photo,
+      image: ramala_athika,
       specialisations: {
         en: 'Mathematics, Step-by-Step Problem Solving, Calculation Skills, Logical Thinking',
         ta: 'கணிதம், படிப்படியான கணக்குத் தீர்வு, கணக்கிடும் திறன் மற்றும் தர்க்க சிந்தனை',
