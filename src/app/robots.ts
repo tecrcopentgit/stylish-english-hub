@@ -6,6 +6,6 @@ export default function robots(): MetadataRoute.Robots {
       userAgent: "*",
       allow: "/",
     },
-    sitemap: "https://www.stylish-eng-hub.in/sitemap.xml",
+    sitemap: "https://stylish-eng-hub.in/sitemap.xml",
   };
 }
