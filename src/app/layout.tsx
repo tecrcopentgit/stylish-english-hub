@@ -53,6 +53,7 @@ export const metadata: Metadata = {
     template: "%s | Stylish English Academy",
   },
 
+
   /*
   |--------------------------------------------------------------------------
   | DESCRIPTION
@@ -67,6 +68,11 @@ export const metadata: Metadata = {
   | AUTHOR
   |--------------------------------------------------------------------------
   */
+
+   verification: {
+    google: "Vli_8-_s0WfiJ5OWKwAUt6VnZedQxK6ek-93hzlYwnk",
+  },
+
 
   authors: [
     {
