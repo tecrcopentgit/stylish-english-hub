@@ -169,11 +169,11 @@ export const metadata: Metadata = {
   */
 
   icons: {
-    icon: logo.src,
+    icon: logo,
 
-    shortcut: logo.src,
+    shortcut: logo,
 
-    apple: logo.src,
+    apple: logo,
   },
 
   /*
@@ -202,7 +202,7 @@ export const metadata: Metadata = {
      */
     images: [
       {
-        url: logo.src,
+        url: logo,
 
         alt: "Stylish English Academy Logo",
 
@@ -231,7 +231,7 @@ export const metadata: Metadata = {
     description:
       "Spoken English, English fluency, communication skills and academic support in Melapalayam, Tirunelveli.",
 
-    images: [logo.src],
+    images: [logo],
   },
 };
 
