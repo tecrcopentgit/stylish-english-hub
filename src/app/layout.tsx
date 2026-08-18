@@ -70,7 +70,7 @@ export const metadata: Metadata = {
   */
 
    verification: {
-    google: "Vli_8-_s0WfiJ5OWKwAUt6VnZedQxK6ek-93hzlYwnk",
+    google: "Vli_8-_s0WfiJ5OWKwAUt6VnZedQxK6ek-93hzlYwnk", //Vli_8-_s0WfiJ5OWKwAUt6VnZedQxK6ek-93hzlYwnk
   },
 
 
