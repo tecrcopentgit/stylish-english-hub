@@ -7,10 +7,15 @@ import "aos/dist/aos.css";
 import { LanguageProvider } from "@/contexts/LanguageContext";
 import { AuthProvider } from "@/contexts/AuthContext";
 import ClientInitializer from "@/components/ClientInitialzer";
+import { academyData } from '../data/academyData';
 
-// Logo
+// Safe runtime extraction: check if it's an object and extract the `.src` string stringently
+const logoAsset = academyData.logo;
+const logoSrc: string = 
+  logoAsset && typeof logoAsset === "object" && "src" in logoAsset
+    ? (logoAsset as any).src
+    : String(logoAsset);
 
-const logo = ''
 const poppins = Poppins({
   subsets: ["latin"],
   weight: ["400", "500", "600", "700"],
@@ -30,49 +35,41 @@ const inter = Inter({
 | SEO METADATA
 |--------------------------------------------------------------------------
 */
-
 export const metadata: Metadata = {
   /*
   |--------------------------------------------------------------------------
   | Website URL
   |--------------------------------------------------------------------------
   */
-
-  metadataBase: new URL("https://www.stylish-eng-hub.in"),
+  metadataBase: new URL("https://stylish-eng-hub.in"),
 
   /*
   |--------------------------------------------------------------------------
   | TITLE
   |--------------------------------------------------------------------------
   */
-
   title: {
     default:
       "Stylish English Academy | Best English Academy in Melapalayam, Tirunelveli",
-
     template: "%s | Stylish English Academy",
   },
-
 
   /*
   |--------------------------------------------------------------------------
   | DESCRIPTION
   |--------------------------------------------------------------------------
   */
-
   description:
     "Stylish English Academy is an English learning academy in Melapalayam, Tirunelveli, offering spoken English, English fluency, communication skills, public speaking and academic support.",
 
   /*
   |--------------------------------------------------------------------------
-  | AUTHOR
+  | AUTHOR & VERIFICATION
   |--------------------------------------------------------------------------
   */
-
-   verification: {
-    google: "Vli_8-_s0WfiJ5OWKwAUt6VnZedQxK6ek-93hzlYwnk", //Vli_8-_s0WfiJ5OWKwAUt6VnZedQxK6ek-93hzlYwnk
+  verification: {
+    google: "Vli_8-_s0WfiJ5OWKwAUt6VnZedQxK6ek-93hzlYwnk",
   },
-
 
   authors: [
     {
@@ -81,52 +78,35 @@ export const metadata: Metadata = {
   ],
 
   creator: "Stylish English Academy",
-
   publisher: "Stylish English Academy",
 
   /*
   |--------------------------------------------------------------------------
   | KEYWORDS
   |--------------------------------------------------------------------------
-  |
-  | Note:
-  | Google does not use the meta keywords tag for ranking.
-  | These keywords are still included because you requested them.
-  |
   */
-
   keywords: [
     "Stylish English Academy",
-
     "Best English Academy in Melapalayam",
     "English Academy in Melapalayam",
     "English Academy in Tirunelveli",
     "Best English Academy in Tirunelveli",
-
     "Spoken English Classes in Melapalayam",
     "Spoken English Classes in Tirunelveli",
-
     "English Speaking Course in Melapalayam",
     "English Speaking Course in Tirunelveli",
-
     "English Communication Classes in Melapalayam",
     "English Communication Classes in Tirunelveli",
-
     "English Fluency Training in Melapalayam",
     "English Fluency Training in Tirunelveli",
-
     "English Language Institute in Tirunelveli",
     "English Training Institute in Tirunelveli",
-
     "English Classes in Melapalayam",
     "English Classes in Tirunelveli",
-
     "Spoken English Institute in Tirunelveli",
     "English Communication Training in Tirunelveli",
-
     "Public Speaking Classes in Tirunelveli",
     "English Grammar Classes in Tirunelveli",
-
     "Academic Tuition in Melapalayam",
     "Student Development in Tirunelveli",
     "Personality Development in Tirunelveli",
@@ -137,7 +117,6 @@ export const metadata: Metadata = {
   | CANONICAL
   |--------------------------------------------------------------------------
   */
-
   alternates: {
     canonical: "/",
   },
@@ -147,15 +126,12 @@ export const metadata: Metadata = {
   | ROBOTS
   |--------------------------------------------------------------------------
   */
-
   robots: {
     index: true,
     follow: true,
-
     googleBot: {
       index: true,
       follow: true,
-
       "max-image-preview": "large",
       "max-snippet": -1,
       "max-video-preview": -1,
@@ -167,13 +143,10 @@ export const metadata: Metadata = {
   | FAVICON / LOGO
   |--------------------------------------------------------------------------
   */
-
   icons: {
-    icon: logo.src,
-
-    shortcut: logo.src,
-
-    apple: logo.src,
+    icon: logoSrc,
+    shortcut: logoSrc,
+    apple: logoSrc,
   },
 
   /*
@@ -181,35 +154,19 @@ export const metadata: Metadata = {
   | OPEN GRAPH
   |--------------------------------------------------------------------------
   */
-
   openGraph: {
     type: "website",
-
     locale: "en_IN",
-
-    url: "https://www.stylish-eng-hub.in/",
-
+    url: "https://stylish-eng-hub.in/",
     siteName: "Stylish English Academy",
-
     title:
       "Stylish English Academy | Best English Academy in Melapalayam, Tirunelveli",
-
     description:
       "Learn spoken English, improve communication skills and build English fluency at Stylish English Academy in Melapalayam, Tirunelveli.",
-
-    /*
-     * Using your imported logo instead of public/opengraph-image.jpg
-     */
     images: [
       {
-        url: logo.src,
-
+        url: logoSrc,
         alt: "Stylish English Academy Logo",
-
-        /*
-         * If your actual logo dimensions are different,
-         * these values should ideally match the real dimensions.
-         */
         width: 512,
         height: 512,
       },
@@ -221,17 +178,13 @@ export const metadata: Metadata = {
   | TWITTER / X
   |--------------------------------------------------------------------------
   */
-
   twitter: {
     card: "summary",
-
     title:
       "Stylish English Academy | English Academy in Melapalayam, Tirunelveli",
-
     description:
       "Spoken English, English fluency, communication skills and academic support in Melapalayam, Tirunelveli.",
-
-    images: [logo.src],
+    images: [logoSrc],
   },
 };
 
@@ -240,7 +193,6 @@ export const metadata: Metadata = {
 | ROOT LAYOUT
 |--------------------------------------------------------------------------
 */
-
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -257,20 +209,17 @@ export default function RootLayout({
         Tamil Font
         --------------------------------------------------------------------
         */}
-
         <link
           rel="preconnect"
-          href="https://fonts.googleapis.com"
+          href="https://googleapis.com"
         />
-
         <link
           rel="preconnect"
-          href="https://fonts.gstatic.com"
+          href="https://gstatic.com"
           crossOrigin="anonymous"
         />
-
         <link
-          href="https://fonts.googleapis.com/css2?family=Noto+Sans+Tamil:wght@400;500;600;700&display=swap"
+          href="https://googleapis.com/css2?family=Noto+Sans+Tamil:wght@400;500;600;700&display=swap"
           rel="stylesheet"
         />
       </head>

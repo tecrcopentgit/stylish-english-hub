@@ -13,11 +13,12 @@ import ramala_athika from '@/assets/ramala_athika.jpeg';
 import sirin_photo from '@/assets/sirin.jpeg';
 
 import classroom from '../assets/images/classroom.jpeg';
+import web_logo from '@/assets/stylish_english_hub.jpeg';
 
 export const academyData = {
   // Academy Name (Do not translate)
   name: 'Stylish English Academy',
- 
+  logo: web_logo,
   
   // Taglines
   tagline: {
