@@ -7,7 +7,7 @@ import { useLanguage } from '@/contexts/LanguageContext';
 import LanguageSwitch, { LanguageSwitchLight } from '@/components/ui/LanguageSwitch';
 import { academyData } from '@/data/academyData';
 import Image from 'next/image';
-import stylish_english_academy_logo from '../../assets/stylish_english_hub.png';
+import stylish_english_academy_logo from '../../assets/stylish_english_hub.jpeg';
 
 export default function Navbar() {
   const { t } = useLanguage();
@@ -65,7 +65,7 @@ export default function Navbar() {
         animate={{ y: 0 }}
         transition={{ duration: 0.5 }}
         className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-          isScrolled ? 'bg-white shadow-lg' : 'bg-transparent'
+          isScrolled ? ' bg-gradient-to-tr from-purple-900  to-black shadow-lg' : 'bg-transperant '
         }`}
       >
         <nav className="container mx-auto px-4 lg:px-8">
@@ -73,20 +73,20 @@ export default function Navbar() {
             {/* Logo */}
             <Link href="/" className="flex items-center gap-3">
               <div
-                className={`flex items-center h-13 w-13 *:justify-center rounded-full shadow-xl shadow-blue-400  group-hover:rotate-5 p-1 ${
+                className={`flex items-center  border-2 border-blue-400 *:justify-center rounded-full shadow-xl shadow-blue-400  group-hover:rotate-5 p-1 ${
                   isScrolled ? 'bg-primary' : 'bg-blue-400 '
                 }`}
               >
                 <Image
                   src={stylish_english_academy_logo}
-                  className="rounded-full h-full w-full object-cover "
+                  className="rounded-full h-10 w-10  object-cover "
                   alt="Academy Logo" // Added alt tag for accessibility
                 />
               </div>
               <div className="hidden sm:block">
                 <p
                   className={`font-bold text-lg leading-tight group-hover:scale-105 ${
-                    isScrolled ? 'text-primary' : 'text-white'
+                   'text-white'
                   }`}
                 >
                   {academyData.name}
@@ -105,7 +105,7 @@ export default function Navbar() {
     }
   }}
   className={`hidden sm:flex font-medium text-sm transition-colors rounded-md border p-2 bg-transparent focus:outline-none focus:ring-2 focus:ring-accent ${
-    isScrolled ? 'text-gray-700 border-gray-300' : 'text-white bg-gray-900/50 border-white/20'
+    'text-white bg-gray-900/50 border-white/20'
   }`}
 >
   {/* 3. REMOVED: Static "Navigate to..." placeholder option */}

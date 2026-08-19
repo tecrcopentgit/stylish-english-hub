@@ -9,8 +9,8 @@ import { AuthProvider } from "@/contexts/AuthContext";
 import ClientInitializer from "@/components/ClientInitialzer";
 
 // Logo
-import logo from "@/assets/stylish_english_hub.jpeg";
 
+const logo = ''
 const poppins = Poppins({
   subsets: ["latin"],
   weight: ["400", "500", "600", "700"],
@@ -169,11 +169,11 @@ export const metadata: Metadata = {
   */
 
   icons: {
-    icon: logo,
+    icon: logo.src,
 
-    shortcut: logo,
+    shortcut: logo.src,
 
-    apple: logo,
+    apple: logo.src,
   },
 
   /*
@@ -202,7 +202,7 @@ export const metadata: Metadata = {
      */
     images: [
       {
-        url: logo,
+        url: logo.src,
 
         alt: "Stylish English Academy Logo",
 
@@ -231,7 +231,7 @@ export const metadata: Metadata = {
     description:
       "Spoken English, English fluency, communication skills and academic support in Melapalayam, Tirunelveli.",
 
-    images: [logo],
+    images: [logo.src],
   },
 };
 

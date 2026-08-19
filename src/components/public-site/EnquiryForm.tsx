@@ -108,14 +108,14 @@ export default function EnquiryForm() {
   };
 
   return (
-    <section id="enquiry" className="section bg-gradient-to-br from-primary via-primary-dark to-secondary">
-      <div className="container mx-auto">
+    <section id="enquiry" className="section bg-gradient-to-b from-purple-900 via-primary-dark to-purple-600">
+      <div className="container mx-auto ">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: '-100px' }}
           transition={{ duration: 0.6 }}
-          className="text-center mb-12"
+          className="text-center mb-12 "
         >
           <h2 className="section-heading text-white">{t.enquiry.heading}</h2>
         </motion.div>
@@ -125,9 +125,9 @@ export default function EnquiryForm() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6, delay: 0.2 }}
-          className="max-w-2xl mx-auto"
+          className="max-w-2xl mx-auto "
         >
-          <div className="card p-8">
+          <div className="p-8 bg-green-500/20 rounded-xl">
             {status === 'success' ? (
               <motion.div
                 initial={{ opacity: 0, scale: 0.9 }}
@@ -140,9 +140,9 @@ export default function EnquiryForm() {
                 <p className="text-text-primary font-medium">{t.enquiry.success}</p>
               </motion.div>
             ) : (
-              <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+              <form onSubmit={handleSubmit(onSubmit)} className="space-y-6 ">
                 {/* Student Name */}
-                <div className="form-group">
+                <div className="form-group ">
                   <label htmlFor="studentName" className="form-label">
                     {t.enquiry.studentName} <span className="text-red-500">*</span>
                   </label>
@@ -159,7 +159,7 @@ export default function EnquiryForm() {
                 </div>
 
                 {/* Parent Name */}
-                <div className="form-group">
+                <div className="form-group ">
                   <label htmlFor="parentName" className="form-label">
                     {t.enquiry.parentName} <span className="text-red-500">*</span>
                   </label>

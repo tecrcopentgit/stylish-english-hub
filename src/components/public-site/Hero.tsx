@@ -27,23 +27,21 @@ export default function Hero() {
   return (
     <section
       id="home"
-      className="relative min-h-screen flex items-center justify-center overflow-hidden p-10"
+      className="relative min-h-screen flex items-center justify-center overflow-hidden  bg-gradient-to-b from-purple-900 to-black"
       
     >
       {/* Background */}
       <div
-        className="absolute inset-0 bg-cover bg-center bg-no-repeat p-20"
-        style={{
-          backgroundImage: `url('${academyData.images.heroBackground}')`,
-        }}
+        className="absolute inset-0 bg-cover bg-center bg-no-repeat  p-20"
+
         data-aos='fade-in'
       >
         {/* Gradient Overlay */}
-        <div className="absolute inset-0 hero-overlay" />
+        <div className="absolute inset-0  " />
       </div>
 
       {/* Content */}
-      <div className="relative z-10 container mx-auto px-4 py-20 text-center">
+      <div className="relative z-10 container mx-auto px-4 py-20 text-center ">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
@@ -58,7 +56,7 @@ export default function Hero() {
             className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold text-white mb-6 leading-tight "
           data-aos='zoom-in'>
             
-            <span className=" text-5xl text-blue-500" data-aos='zoom-in'>STYLISH ENGLISH</span>
+            <span className=" text-5xl text-cyan-500" data-aos='zoom-in'>STYLISH ENGLISH</span>
             <span className="block text-amber-400 text-xl ">KNOWLEDGE HUB</span>
             <div className='flex  items-center justify-center '><Image className=' h-20 w-20 rounded-full shadow-xl shadow-blue-200' src = {academy_logo} alt = ''/></div>
           </motion.h1>
@@ -82,7 +80,7 @@ export default function Hero() {
           >
             <button
               onClick={() => scrollToSection('#programs')}
-              className="btn btn-accent w-full sm:w-auto group"
+              className="btn bg-cyan-400 shadow-xl shadow-cyan-500 hover:shadow-blue-400 w-full sm:w-auto group"
             >
               {t.hero.explorePrograms}
               <ArrowRight className="w-5 h-5 transition-transform group-hover:translate-x-1" />

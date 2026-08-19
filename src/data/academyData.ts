@@ -17,7 +17,7 @@ import classroom from '../assets/images/classroom.jpeg';
 export const academyData = {
   // Academy Name (Do not translate)
   name: 'Stylish English Academy',
-  logo:'' ,
+ 
   
   // Taglines
   tagline: {
@@ -87,19 +87,7 @@ export const academyData = {
   },
 
   // Images - Update these paths after uploading images
-  images: {
-    logo: ' /images/academy-logo.png ',
-    heroBackground: ' /images/homepage-background.jpg ',
-    founder: ' /images/kaja_sir.jpeg ' ,
-    cofounder: ' /images/r-mohamed-uvaiz-cofounder.jpg ',
-    teachers: {
-      zulfaNisa: '/images/zulfa-nisa-teacher.png',
-      jannathulThasnim: '/images/jannathul-thasnim-teacher.png',
-      mathematicsTeacher: '/images/mathematics-teacher.png',
-      mohamedYahya: '/images/mohamed-yahya-teacher.png',
-    },
-  },
-
+  
   // Leadership Team
   leadership: [
     {
@@ -246,7 +234,7 @@ export const academyData = {
     },
     {
       id: 'ahamed_sirin',
-      name: 'Mrs. Ahamed Sirin N',
+      name: 'Mrs. Ahamed Sireen N',
       image: sirin_photo,
       qualification: 'B.Sc,. Chemisty & B.Ed.,',
       specialisations: {
