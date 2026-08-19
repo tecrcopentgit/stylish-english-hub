@@ -104,8 +104,8 @@ export default function Navbar() {
       // 2. REMOVED: e.target.value = ""; (Let state handle the value)
     }
   }}
-  className={`hidden sm:flex font-medium text-sm transition-colors rounded-md border p-2 bg-transparent focus:outline-none focus:ring-2 focus:ring-accent ${
-    'text-white bg-gray-900/50 border-white/20'
+  className={`hidden  sm:flex font-medium text-sm transition-colors rounded-md border p-2 bg-transparent focus:outline-none focus:ring-2  ${
+    'text-shite bg-gray-900/50 border-white/20'
   }`}
 >
   {/* 3. REMOVED: Static "Navigate to..." placeholder option */}
@@ -114,8 +114,8 @@ export default function Navbar() {
     <option
       key={link.href}
       value={link.href}
-      className={`rounded-full bg-blue-400/50 border font-bold border-red-600 p-2 ${
-        isScrolled ? 'text-gray-700' : 'text-gray-900'
+      className={`rounded-xl  bg-violet-400 font-bold    ${
+        isScrolled ? 'text-white' : 'text-black'
       }`}
     >
       {link.label}
@@ -147,12 +147,12 @@ export default function Navbar() {
                 onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
                 className={`lg:hidden p-2 rounded-lg transition-colors ${
                   isScrolled
-                    ? 'text-gray-700 hover:bg-gray-100'
-                    : 'text-white hover:bg-white/10'
+                    ? 'text-gray-100 hover:bg-violet-800'
+                    : 'text-white hover:bg-rose-600'
                 }`}
                 aria-label="Toggle menu"
               >
-                {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
+                {isMobileMenuOpen ? <X size={24}  /> : <Menu size={24} />}
               </button>
             </div>
           </div>
@@ -167,7 +167,7 @@ export default function Navbar() {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -20 }}
             transition={{ duration: 0.2 }}
-            className="fixed inset-x-0 top-20 z-40 bg-white shadow-xl lg:hidden"
+            className="fixed inset-x-0 top-20 z-40 bg-gradient-to-tl from-black to-purple-900 shadow-xl lg:hidden"
           >
             <div className="container mx-auto px-4 py-6">
               <div className="flex flex-col gap-2">
@@ -176,20 +176,20 @@ export default function Navbar() {
                     key={link.href}
                     href={link.href}
                     onClick={(e) => scrollToSection(e, link.href)}
-                    className="py-3 px-4 text-gray-700 font-medium hover:bg-gray-50 rounded-lg transition-colors"
+                    className="py-3 px-4 text-gray-100 font-medium hover:bg-rose-900 rounded-lg transition-colors"
                   >
                     {link.label}
                   </a>
                 ))}
                 <hr className="my-2" />
                 <div className="flex items-center justify-between px-4 py-2">
-                  <span className="text-gray-600">Language</span>
+                  <span className="text-gray-100">Language</span>
                   <LanguageSwitchLight />
                 </div>
                 <a
                   href="#enquiry"
                   onClick={(e) => scrollToSection(e, '#enquiry')}
-                  className="mt-2 py-3 px-4 bg-blue-700 text- text-center font-medium rounded-lg hover:bg-blue-100 transition-colors"
+                  className="mt-2 py-3 px-4 bg-violet-700 text- text-center font-medium rounded-lg hover:bg-blue-100 transition-colors"
                 >
                   {t.nav.enquireNow}
                 </a>
