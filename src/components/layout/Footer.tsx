@@ -6,6 +6,7 @@ import { useLanguage } from '@/contexts/LanguageContext';
 import { academyData } from '@/data/academyData';
 import Image from 'next/image';
 import logo from '../../assets/stylish_english_hub.jpeg';
+import genz_uv_f_l from '../../assets/logo/genuv-footer-logo.png'
 
 export default function Footer() {
   const { language, t } = useLanguage();
@@ -156,10 +157,10 @@ export default function Footer() {
         <div className="mt-12 p-4 border-t border-gray-700 ">
           <div className='flex  flex-col items-center md:items-start justify-center '>
 <p className=' text-xs '>Developed By </p>
-          <div className='flex flex-row items-center justify-center md:justify-normal text-xs  gap-1 ' data-aos='zoom-in'>
-          <a className='group font-heading  p-1 rounded-full flex gap-2 items-center  hover:scale-104' href='https://gen-z-uv-offical.vercel.app/'>
-          <div className='border-2 md:border rounded-full p-1 group-hover:shadow-xl group-hover:p-0 group-hover:m-1 transition-all ease-in-out duration-1000 shadow-green-400  border-green-500'><Image className='h-8 w-8 object-cover  border-2 border-green-300 rounded-full' src='https://gen-z-uv-offical.vercel.app/GenZ-logo.jpeg' width={300} height={300}  alt=''/></div>
-          <div className='group  flex items-center'><p>GEN</p><p className='text-2xl rotate-15 md:rotate-0 md:group-hover:rotate-20 transition-all ease-in-out duration-2000 text-green-500 font-bold'>Z</p><p>UV</p></div>
+          <div className='flex flex-row items-center justify-center md:justify-normal text-xs  gap-1  p-3 rounded-xl bg-white' data-aos='zoom-in'>
+          <a className='group font-heading  p-1 rounded-full flex gap-2 items-center  hover:scale-104' href='https://genzuv.in/'>
+          <div className='border-2 md:border rounded-full p-1 group-hover:shadow-xl group-hover:p-0 group-hover:m-1 transition-all ease-in-out duration-1000 shadow-green-400  border-green-500'><Image className='h-13 w-13 font-serif font-medium object-cover bg-black border-2 border-green-300 rounded-full' src={genz_uv_f_l} width={300} height={300}  alt=''/></div>
+          <div className='group text-blue-500 font-medium font-serif text-2xl flex items-center'><p>GEN</p><p className='text-2xl rotate-15 md:rotate-0 md:group-hover:rotate-20 transition-all ease-in-out duration-2000 text-green-500 font-bold'>Z</p><p>UV</p></div>
           </a></div>
           </div>
           

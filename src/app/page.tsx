@@ -13,6 +13,7 @@ import Gallery from '@/components/public-site/Gallery';
 import Contact from '@/components/public-site/Contact';
 import EnquiryForm from '@/components/public-site/EnquiryForm';
 import WhatsAppButton from '@/components/public-site/WhatsAppButton';
+import SocialHub from '@/components/public-site/SocialHub';
 
 import { useEffect } from 'react'; 
 import AOS from 'aos';
@@ -39,6 +40,7 @@ export default function HomePage() {
       <Teachers />
       <Gallery />
       <Contact />
+      <SocialHub/>
       <EnquiryForm />
       <Footer />
       <WhatsAppButton />
