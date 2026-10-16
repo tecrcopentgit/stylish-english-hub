@@ -160,7 +160,7 @@ export default function Footer() {
           <div className='flex flex-row items-center justify-center md:justify-normal text-xs  gap-1  p-3 rounded-xl bg-white' data-aos='zoom-in'>
           <a className='group font-heading  p-1 rounded-full flex gap-2 items-center  hover:scale-104' href='https://genzuv.in/'>
           <div className='border-2 md:border rounded-full p-1 group-hover:shadow-xl group-hover:p-0 group-hover:m-1 transition-all ease-in-out duration-1000 shadow-green-400  border-green-500'><Image className='h-13 w-13 font-serif font-medium object-cover bg-black border-2 border-green-300 rounded-full' src={genz_uv_f_l} width={300} height={300}  alt=''/></div>
-          <div className='group text-blue-500 font-medium font-serif text-2xl flex items-center'><p>GEN</p><p className='text-2xl rotate-15 md:rotate-0 md:group-hover:rotate-20 transition-all ease-in-out duration-2000 text-green-500 font-bold'>Z</p><p>UV</p></div>
+          <div className='group text-black font-medium font-serif text-2xl flex items-center'><p>GEN</p><p className='text-2xl rotate-15 md:rotate-0 md:group-hover:rotate-20 transition-all ease-in-out duration-2000 text-green-500 font-bold'>Z</p><p>UV</p></div>
           </a></div>
           </div>
           
